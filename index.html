@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Nomes</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Adicionando esta linha no HTML -->
+<p id="no-results" style="display: none;">Nenhum nome encontrado.</p>
+
+<!-- INICIO DO BLOQUEADOR -->
+  
+    
+<script type="text/javascript">
+    var message="Desculpe, o clique com o botão direito foi desativado.";
+    function clickIE() {if (document.all) {(message);return false;}}
+    function clickNS(e) {if
+    (document.layers||(document.getElementById&&!document.all)) {
+        if (e.which==2||e.which==3) {(message);return false;}}}
+    if (document.layers)
+    {document.captureEvents(Event.MOUSEDOWN);document.onmousedown=clickNS;}
+    else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;}
+    document.oncontextmenu=new Function("return false")
+</script>
+
+
+
+<script>
+    document.onkeydown = function(e) {
+        if(event.keyCode == 123) {
+            return false;
+        }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
+            return false;
+        }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
+            return false;
+        }
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
+            return false;
+        }
+    }
+</script>
+
+
+
+<script>
+    function disableselect(e) {
+        return false;
+    }
+
+    function reEnable() {
+        return true;
+    }
+
+    document.onselectstart = new Function("return false");
+
+    if (window.sidebar) {
+        document.onmousedown = disableselect;
+        document.onclick = reEnable;
+    }
+</script>
+
+
+<!-- FINAL DO BLOQUEADOR -->
+
+</head>
+<body>
+    
+
+<div><h1 align="center"><img src="img/logo_pmerj.png" alt="Foto do Rodrigo" class="logo">Lista de Nomes - 3ª UPP/19ºBPM - CIA UPP PAVÃO</h1></div>
+
+
+<br>
+<br>
+    <div class="search-container">Busca PPMM:
+        <input type="text" id="search-input" placeholder="Digite o nome que deseja buscar...">
+    </div>
+
+    <ul id="name-list">
+        <li><img src="img/rodrigo.png" alt="Foto do Rodrigo" class="profile-pic"> 3º SGT PM 94010 R. SIMÕES</li>
+        <li><img src="img/alacrino.png" alt="Foto do Alacrino" class="profile-pic">Alacrino - 100000</li>
+        <li><img src="img/dan.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 97196 DAN - (21) 96482-7877</li>
+        <li><img src="img/pinheiro.png" alt="Foto do xx" class="profile-pic">CB PM 104953 PINHEIRO - (21) 99347-1036</li>
+        <li><img src="img/gouveia.png" alt="Foto do xx" class="profile-pic">CB PM 105131 F. GOUVÊA - (21) 99823-1200</li>
+        <li><img src="img/gabriel.png" alt="Foto do xx" class="profile-pic">3º SGT PM 92759 GABRIEL - (21) 96428-7665</li>
+        <li><img src="img/f_abreu.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93168 F. ABREU - (21) 98186-7018</li>
+        <li><img src="img/souza.png" alt="Foto do xx" class="profile-pic">CB PM 105248 DE SOUZA - (21) 98795-8625</li>
+        <li><img src="img/pinna.png" alt="Foto do xx" class="profile-pic">3º SGT PM 90303 PINNA - (21) 96459-0951</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 100348 CABRAL - (21) 96499-5943</li>
+        <li><img src="img/cleison.png" alt="Foto do xx" class="profile-pic">3º SGT PM 96990 CLEISON - (24) 99859-9248</li>
+        <li><img src="img/fully.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95629 FULLY - (21) 97273-8628</li>
+        <li><img src="img/gegundo.png" alt="Foto do xx" class="profile-pic">CB PM 97778 GEGUNDO - (21) 98252-0140</li>
+        <li><img src="img/r_machado.png" alt="Foto do xx" class="profile-pic">CB PM 99164 R. MACHADO - (21) 96440-2142</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102712 JOAQUIM - (21) 96472-1739</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91071 DIAS - (21) 96441-5591</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 108677 ÉDVAN - (21) 98954-8941</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 103630 S. ALVES - (21) 96417-4412</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109067 LUIZ HENRIQUE C - (24) 98815-0463</li>
+        <li><img src="img/soares.png" alt="Foto do xx" class="profile-pic">CB PM 106348 SOARES - (22) 99806-7454</li>
+        <li><img src="img/l_silva.png" alt="Foto do xx" class="profile-pic"> CB PM 106467 L SILVA - (24) 99233-7100</li>
+        <li><img src="img/mariano.png" alt="Foto do xx" class="profile-pic">SD PM 109738 WAGNER MARIANO - (21) 97608-3720</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 88391 IVAN - (21) 96437-2346</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109908 Jorge triumpho Junior</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 103056 GEORGE - (21) 98175-8555</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 93491 GARCIA - (21) 98410-7792</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 101823 S. LEMOS - (21) 98682-8494</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91131 CONDE - (21) 98658-4062</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91665 R.ALCANTARA - (21) 96504-0543</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 92258 DOMINGOS - (21) 96491-0948</li>
+        <li><img src="img/santos.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93408 SANTOS - (21) 96957-3154</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 98408 NASCIMENTO</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93606 A. ALCANTARA - (21) 96424-4240</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110876</li>
+        <li><img src="img/l_francisco.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93341 L. FRANCISCO - (21) 96521-6019</li>
+        <li><img src="img/sgt_santos.png" alt="Foto do xx" class="profile-pic">2º SGT PM 85458 SANTOS - (21) 96955-5411</li>
+        <li><img src="img/sgt_lacerda.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95837 LACERDA</li>
+        <li><img src="img/alvarenga.png" alt="Foto do xx" class="profile-pic">CB PM 104060 DE ALVARENGA - (00) 7748-1603</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110796</li>
+        <li><img src="img/freitas.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 97129 FREITAS - (21) 99287-0704</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 92646 LEIMAR - (24) 98834-1226</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 104839 BUHARB - (21) 99734-3563</li>
+        <li><img src="img/magiolo.png" alt="Foto do xx" class="profile-pic">CB PM MAGIOLO- (24) 99270-2200</li>
+        <li><img src="img/jonatha.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 96003 JONATHA 2299925-7764</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 96287 RODRIGUES - (22) 99290-3559</li>
+        <li><img src="img/caique.png" alt="Foto do xx" class="profile-pic">CB PM 106037 CAIQUE 2197547-3746</li>
+        <li><img src="img/henrique.png" alt="Foto do xx" class="profile-pic">CB PM 105391 HENRIQUE - (21) 96661-392</li>
+        <li><img src="img/eduardo_sousa_d.png" alt="Foto do xx" class="profile-pic">SD PM 108664 EDUARDO SOUSA D - (21) 97018-9816</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 98202 CRISTIANO - (24) 98128-0011</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 108023 ALESSANDRO GOME - (21) 97411-7187</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 101276 BARRETO - (22) 99993-9886</li>
+        <li><img src="img/f_ribeiro.png" alt="Foto do xx" class="profile-pic">CB PM 105377 F. RIBEIRO - (22) 97402-5744</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102712 JOAQUIM - (21) 96472-1739</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91071 DIAS - (21) 96441-5591</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 94686 BESSA - (21) 96935-6259</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 98607 SOUZA - (21) 96455-7540</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 101823 S. LEMOS - (21) 98682-8494</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91131 CONDE - (21) 98658-4062</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> SUBTEN PM 66381 J. MARCELO - (21) 96451-8575</li>
+        <li><img src="img/l_francisco.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 93341 L. FRANCISCO - (21) 96521-6019</li>
+        <li><img src="img/josue.png" alt="Foto do xx" class="profile-pic">SD PM 110387 JOSUÉ - (22) 99886-7687</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95837 LACERDA</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 92490 VALIM - (21) 97101-1575</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 106650 MATHEUS</li>
+        <li><img src="img/laia.png" alt="Foto do xx" class="profile-pic">CB PM 105374 LAIA - (21) 97949-7566</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 96541 SILVEIRA - (21) 96417-5093</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93752 CARDOSO - (21) 99826-4004</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 88391 IVAN - (21) 96437-2346</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> SD PM 109908 Jorge triumpho Junior</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110297 L.BARBOSA - (21) 99186-9919</li>
+        <li><img src="img/santos.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93408 SANTOS - (21) 96957-3154</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 98408 NASCIMENTO</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> SD PM 110796</li>
+        <li><img src="img/rangel.png" alt="Foto do xx" class="profile-pic"> CB PM 105375 RANGEL - (21) 99045-4574</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 99488 DE PAULA - (24) 99842-6337</li>
+        <li><img src="img/ulisses.png" alt="Foto do xx" class="profile-pic">CB PM 100360 ULISSES - (21) 98638-7179</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> SD PM 108786 JONATHAN DOS SA - (21) 98257-2969</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 105600 MAGNO - (21) 96917-2847</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102861 R. ARAUJO - (21) 97018-5844</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 101839 WILLIAM - (21) 96424-0437</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 104282 SILVA</li>
+        <li><img src="img/coutinho.png" alt="Foto do xx" class="profile-pic">SD PM 107561 COUTINHO</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 107520 T RODRIGUES</li>
+        <li><img src="img/miqueline.png" alt="Foto do xx" class="profile-pic">CB PM 105313 MIQUELINE - (21) 96918-3138</li>
+        <li><img src="img/andreza.jpg" alt="Foto do xx" class="profile-pic">SD PM 110800 ANDREZA - (21) 974949605</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 106351 M ARAUJO - (21) 98276-6602</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 99199 CARDOSO - (21) 96807-2899</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 94686 BESSA - (21) 96935-6259</li>
+        <li><img src="img/souza_silva.png" alt="Foto do xx" class="profile-pic"> CB PM 98607 SOUZA - (21) 96455-7540</li>
+        <li><img src="img/ferreira.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 93331 FERREIRA - (21) 96431-7876</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 99133 LEMOS - (21) 964293048</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95714 MALAQUIAS - (21) 96977-6346</li>
+        <li><img src="img/r_filho.png" alt="Foto do xx" class="profile-pic">CB PM 105249 R. FILHO - (21) 97007-2545</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 100032 R. LACERDA - (21) 97029-7523</li>
+        <li><img src="img/johnathan.png" alt="Foto do xx" class="profile-pic">3º SGT PM 98121 JOHNATHAN - (21) 96467-5646</li>
+        <li><img src="img/cortez.png" alt="Foto do xx" class="profile-pic">CB PM 106533 CORTEZ - (21) 99777-3565</li>
+        <li><img src="img/junior.png" alt="Foto do xx" class="profile-pic">CB PM 102181 JUNIOR - (21) 96584-5525</li>
+        <li><img src="img/boneca_policial.png" alt="Foto do xx" class="profile-pic">CB PM 105769 JULIANA GUEDES - (21) 97986-0216</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 106561 MARCOS - (21) 99995-4971</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 106260 BAPTISTA - (21) 98734-7572</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> SD PM 110297 L.BARBOSA - (21) 99186-9919</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109414 BRUNO BIANCHI G</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110433</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 86615 ISAIAS</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93998 PERES</li>
+        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91115 ITALO</li>
+    </ul>
+
+    <script src="script.js"></script>
+</body>
+</html>
