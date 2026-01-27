@@ -1,75 +1,26 @@
-// script.js
-document.getElementById('search-input').addEventListener('keyup', function() {
-    let filter = this.value.toLowerCase();
-    let names = document.querySelectorAll('#name-list li');
+<script>
+const searchInput = document.getElementById("search-input");
+const filtroPosto = document.getElementById("filtro-posto");
+const themeBtn = document.getElementById("toggle-theme");
 
-    names.forEach(function(name) {
-        if (name.textContent.toLowerCase().includes(filter)) {
-            name.classList.remove('hidden');
-        } else {
-            name.classList.add('hidden');
-        }
-    });
-});
+function aplicarFiltros() {
+  const termo = searchInput.value.toLowerCase();
+  const posto = filtroPosto.value;
 
-// script.js
-document.getElementById('add-name-btn').addEventListener('click', function() {
-    let newName = document.getElementById('new-name').value;
-    if (newName) {
-        let newLi = document.createElement('li');
-        newLi.textContent = newName;
-        document.getElementById('name-list').appendChild(newLi);
-        document.getElementById('new-name').value = '';
-    }
-});
+  const filtrados = policiais.filter(p => {
+    const nomeOk = p.nome.toLowerCase().includes(termo) || p.matricula.includes(termo);
+    const postoOk = posto === "" || p.posto.includes(posto);
+    return nomeOk && postoOk;
+  });
 
-// Adicionar ao final da função de busca
-let anyVisible = Array.from(names).some(name => !name.classList.contains('hidden'));
-document.getElementById('no-results').style.display = anyVisible ? 'none' : 'block';
-
-function removeAccents(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  render(filtrados);
 }
 
-document.getElementById('search-input').addEventListener('keyup', function() {
-    let filter = removeAccents(this.value.toLowerCase());
-    let names = document.querySelectorAll('#name-list li');
+searchInput.addEventListener("input", aplicarFiltros);
+filtroPosto.addEventListener("change", aplicarFiltros);
 
-    names.forEach(function(name) {
-        let nameText = removeAccents(name.textContent.toLowerCase());
-        if (nameText.includes(filter)) {
-            name.classList.remove('hidden');
-        } else {
-            name.classList.add('hidden');
-        }
-    });
+themeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  themeBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
 });
-
-
-// Save to localStorage
-function saveNameToStorage(newName) {
-    let names = JSON.parse(localStorage.getItem('namesList')) || [];
-    names.push(newName);
-    localStorage.setItem('namesList', JSON.stringify(names));
-}
-
-// Load from localStorage
-function loadNamesFromStorage() {
-    let storedNames = JSON.parse(localStorage.getItem('namesList')) || [];
-    storedNames.forEach(function(name) {
-        let newLi = document.createElement('li');
-        newLi.textContent = name;
-        document.getElementById('name-list').appendChild(newLi);
-    });
-}
-
-window.onload = loadNamesFromStorage;
-
-document.querySelectorAll('.remove-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        let li = this.parentElement;
-        li.parentElement.removeChild(li);
-        updateStorage();
-    });
-});
-
+</script>

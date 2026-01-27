@@ -1,232 +1,1153 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de Nomes</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Adicionando esta linha no HTML -->
-<p id="no-results" style="display: none;">Nenhum nome encontrado.</p>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buscador de PPMM</title>
 
-<!-- INICIO DO BLOQUEADOR -->
-  
-    
-<script type="text/javascript">
-    var message="Desculpe, o clique com o botão direito foi desativado.";
-    function clickIE() {if (document.all) {(message);return false;}}
-    function clickNS(e) {if
-    (document.layers||(document.getElementById&&!document.all)) {
-        if (e.which==2||e.which==3) {(message);return false;}}}
-    if (document.layers)
-    {document.captureEvents(Event.MOUSEDOWN);document.onmousedown=clickNS;}
-    else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;}
-    document.oncontextmenu=new Function("return false")
-</script>
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f2f4f8;
+  margin: 0;
+  padding: 20px;
+}
 
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
+.search-container {
+  max-width: 500px;
+  margin: 0 auto 20px auto;
+}
 
-<script>
-    document.onkeydown = function(e) {
-        if(event.keyCode == 123) {
-            return false;
-        }
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
-            return false;
-        }
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
-            return false;
-        }
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
-            return false;
-        }
-    }
-</script>
+.search-container input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
 
+#no-results {
+  text-align: center;
+  margin-top: 20px;
+  color: #c00;
+  display: none;
+}
 
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
 
-<script>
-    function disableselect(e) {
-        return false;
-    }
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
+  transition: transform .2s, box-shadow .2s;
+}
 
-    function reEnable() {
-        return true;
-    }
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.2);
+}
 
-    document.onselectstart = new Function("return false");
+.card img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
 
-    if (window.sidebar) {
-        document.onmousedown = disableselect;
-        document.onclick = reEnable;
-    }
-</script>
+.info strong {
+  display: block;
+  font-size: 14px;
+}
 
+.info span {
+  display: block;
+  font-size: 16px;
+  margin: 3px 0;
+}
 
-<!-- FINAL DO BLOQUEADOR -->
+.info a {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: bold;
+}
 
+footer {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 14px;
+  color: #666;
+}
+
+.logo {
+    width: 50px;
+    align-items: center;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+</style>
 </head>
+
 <body>
-    
 
 <div><h1 align="center"><img src="img/logo_pmerj.png" alt="logo_pmerj" class="logo">Lista de Nomes - 3ª UPP/19ºBPM - CIA UPP PAVÃO</h1></div>
 
+<div class="search-container">
+  <input type="text" id="search-input" placeholder="Buscar por nome ou matrícula...">
+</div>
 
-<br>
-<br>
-    <div class="search-container">Busca PPMM:
-        <input type="text" id="search-input" placeholder="Digite o nome que deseja buscar...">
-    </div>
+<p id="no-results">Nenhum nome encontrado.</p>
 
-    <ul id="name-list">
-        <li><img src="img/rodrigo.png" alt="Foto do Rodrigo" class="profile-pic">3º SGT PM 94010 R. SIMÕES - (21) 98253-9175</li>
-        <li><img src="img/alacrino.png" alt="Foto do Alacrino" class="profile-pic">3º SGT PM 100000 Alacrino - (21) 96576-9875</li>
-        <li><img src="img/dan.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 97196 DAN - (21) 96482-7877</li>
-        <li><img src="img/pinheiro.png" alt="Foto do xx" class="profile-pic">CB PM 104953 PINHEIRO - (21) 99347-1036</li>
-        <li><img src="img/gouveia.png" alt="Foto do xx" class="profile-pic">CB PM 105131 F. GOUVÊA - (21) 99823-1200</li>
-        <li><img src="img/gabriel.png" alt="Foto do xx" class="profile-pic">3º SGT PM 92759 GABRIEL - (21) 96428-7665</li>
-        <li><img src="img/f_abreu.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93168 F. ABREU - (21) 98186-7018</li>
-        <li><img src="img/souza.png" alt="Foto do xx" class="profile-pic">CB PM 105248 DE SOUZA - (21) 98795-8625</li>
-        <li><img src="img/pinna.png" alt="Foto do xx" class="profile-pic">3º SGT PM 90303 PINNA - (21) 96459-0951</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 100348 CABRAL - (21) 96499-5943</li>
-        <li><img src="img/cleison.png" alt="Foto do xx" class="profile-pic">3º SGT PM 96990 CLEISON - (24) 99859-9248</li>
-        <li><img src="img/fully.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95629 FULLY - (21) 97273-8628</li>
-        <li><img src="img/gegundo.png" alt="Foto do xx" class="profile-pic">CB PM 97778 GEGUNDO - (21) 98252-0140</li>
-        <li><img src="img/r_machado.png" alt="Foto do xx" class="profile-pic">CB PM 99164 R. MACHADO - (21) 96440-2142</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102712 JOAQUIM - (21) 96472-1739</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91071 DIAS - (21) 96441-5591</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 108677 ÉDVAN - (21) 98954-8941</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 103630 S. ALVES - (21) 96417-4412</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109067 LUIZ HENRIQUE &nbsp;<B>CAMILO</B>&nbsp; - (24) 98815-0463</li>
-        <li><img src="img/soares.png" alt="Foto do xx" class="profile-pic">CB PM 106348 SOARES - (22) 99806-7454</li>
-        <li><img src="img/l_silva.png" alt="Foto do xx" class="profile-pic">CB PM 106467 L. SILVA - (24) 99233-7100</li>
-        <li><img src="img/mariano.png" alt="Foto do xx" class="profile-pic">SD PM 109738 WAGNER &nbsp; <STRONG> MARIANO </STRONG>&nbsp; - (21) 97608-3720</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 88391 IVAN - (21) 96437-2346</li>
-        <li><img src="img/triumpho.png" alt="Foto do xx" class="profile-pic">SD PM 109908 Jorge triumpho Junior - (21) 96484-4022</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 103056 GEORGE - (21) 98175-8555</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 93491 GARCIA - (21) 98410-7792</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 101823 S. LEMOS - (21) 98682-8494</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91131 CONDE - (21) 98658-4062</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91665 R.ALCANTARA - (21) 96504-0543</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 92258 DOMINGOS - (21) 96491-0948</li>
-        <li><img src="img/santos.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93408 SANTOS - (21) 96957-3154</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 98408 NASCIMENTO - (21) XXXXX-XXXX</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93606 A. ALCANTARA - (21) 96424-4240</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110876</li>
-        <li><img src="img/l_francisco.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93341 L. FRANCISCO - (21) 96521-6019</li>
-        <li><img src="img/sgt_santos.png" alt="Foto do xx" class="profile-pic">2º SGT PM 85458 SANTOS - (21) 96955-5411</li>
-        <li><img src="img/sgt_lacerda.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95837 LACERDA</li>
-        <li><img src="img/alvarenga.png" alt="Foto do xx" class="profile-pic">CB PM 104060 DE ALVARENGA - (00) 7748-1603</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110796 ERICA - (21) 97669-9905</li>
-        <li><img src="img/freitas.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 97129 FREITAS - (21) 99287-0704</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 92646 LEIMAR - (24) 98834-1226</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 104839 BUHARB - (21) 99734-3563</li>
-        <li><img src="img/magiolo.png" alt="Foto do xx" class="profile-pic">CB PM MAGIOLO- (24) 99270-2200</li>
-        <li><img src="img/jonatha.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 96003 JONATHA - (22) 99925-7764</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 96287 RODRIGUES - (22) 99290-3559</li>
-        <li><img src="img/caique.png" alt="Foto do xx" class="profile-pic">CB PM 106037 CAIQUE - (21) 97547-3746</li>
-        <li><img src="img/henrique.png" alt="Foto do xx" class="profile-pic">CB PM 105391 HENRIQUE - (21) 96661-392</li>
-        <li><img src="img/eduardo_sousa_d.png" alt="Foto do xx" class="profile-pic">SD PM 108664 EDUARDO SOUSA D - (21) 97018-9816</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 98202 CRISTIANO - (24) 98128-0011</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 108023 ALESSANDRO GOME - (21) 97411-7187</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 101276 BARRETO - (22) 99993-9886</li>
-        <li><img src="img/f_ribeiro.png" alt="Foto do xx" class="profile-pic">CB PM 105377 F. RIBEIRO - (22) 97402-5744</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102712 JOAQUIM - (21) 96472-1739</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91071 DIAS - (21) 96441-5591</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 94686 BESSA - (21) 96935-6259</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3° SGT PM 98607 SOUZA - (21) 96455-7540</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 101823 S. LEMOS - (21) 98682-8494</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91131 CONDE - (21) 98658-4062</li>
-        <li><img src="img/j_marcelo.png" alt="Foto do xx" class="profile-pic"> SUBTEN PM 66381 J. MARCELO - (21) 96451-8575</li>
-        <li><img src="img/l_francisco.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 93341 L. FRANCISCO - (21) 96521-6019</li>
-        <li><img src="img/josue.png" alt="Foto do xx" class="profile-pic">SD PM 110387 JOSUÉ - (22) 99886-7687</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95837 LACERDA</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 92490 VALIM - (21) 97101-1575</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 106650 MATHEUS - (24) 99928-8510</li>
-        <li><img src="img/laia.png" alt="Foto do xx" class="profile-pic">CB PM 105374 LAIA - (21) 97949-7566</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 96541 SILVEIRA - (21) 96417-5093</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93752 CARDOSO - (21) 99826-4004</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 88391 IVAN - (21) 96437-2346</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110297 L.BARBOSA - (21) 99186-9919</li>
-        <li><img src="img/santos.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93408 SANTOS - (21) 96957-3154</li>
-        <li><img src="img/rangel.png" alt="Foto do xx" class="profile-pic"> CB PM 105375 RANGEL - (21) 99045-4574</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 99488 DE PAULA - (24) 99842-6337</li>
-        <li><img src="img/ulisses.png" alt="Foto do xx" class="profile-pic">CB PM 100360 ULISSES - (21) 98638-7179</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> SD PM 108786 JONATHAN DOS SA - (21) 98257-2969</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 105600 MAGNO - (21) 96917-2847</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102861 R. ARAUJO - (21) 97018-5844</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 101839 WILLIAM - (21) 96424-0437</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 104282 SILVA - (XX) XXXXX-XXXX</li>
-        <li><img src="img/coutinho.png" alt="Foto do xx" class="profile-pic">CB PM 107561 COUTINHO - (21) 97570-8723</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 107520 T RODRIGUES - (21) 98479-8140</li>
-        <li><img src="img/miqueline.png" alt="Foto do xx" class="profile-pic">CB PM 105313 MIQUELINE - (21) 96918-3138</li>
-        <li><img src="img/andreza.jpg" alt="Foto do xx" class="profile-pic">SD PM 110800 ANDREZA - (21) 974949605</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 106351 M ARAUJO - (21) 98276-6602</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 99199 CARDOSO - (21) 96807-2899</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 94686 BESSA - (21) 96935-6259</li>
-        <li><img src="img/souza_p2.png" alt="Foto do xx" class="profile-pic"> CB PM 98607 SOUZA - (21) 96455-7540</li>
-        <li><img src="img/ferreira.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 93331 FERREIRA - (21) 96431-7876</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 99133 LEMOS - (21) 964293048</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95714 MALAQUIAS - (21) 96977-6346</li>
-        <li><img src="img/r_filho.png" alt="Foto do xx" class="profile-pic">CB PM 105249 R. FILHO - (21) 97007-2545</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 100032 R. LACERDA - (21) 97029-7523</li>
-        <li><img src="img/johnathan.png" alt="Foto do xx" class="profile-pic">3º SGT PM 98121 JOHNATHAN - (21) 96467-5646</li>
-        <li><img src="img/cortez.png" alt="Foto do xx" class="profile-pic">CB PM 106533 CORTEZ - (21) 99777-3565</li>
-        <li><img src="img/junior.png" alt="Foto do xx" class="profile-pic">CB PM 102181 JUNIOR - (21) 96584-5525</li>
-        <li><img src="img/boneca_policial.png" alt="Foto do xx" class="profile-pic">CB PM 105769 JULIANA GUEDES - (21) 97986-0216</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 106561 MARCOS - (21) 99995-4971</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> CB PM 106260 BAPTISTA - (21) 98734-7572</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> SD PM 110297 L.BARBOSA - (21) 99186-9919</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109414 BRUNO BIANCHI G - (21) 98876-6548</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110433 D. SANTOS</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic"> 3º SGT PM 86615 ISAIAS</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93998 PERES</li>
-        <li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91115 ITALO - (21) 97704-9221</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109109 RODRIGUES - (21) 98363-4551</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 99242 ADRIEL - (21) 99995-5368</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109754 CAMELO - (21) 97555-6121</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 104197 DA SILVA - (21) 97945-4227</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91783 CHARLES - (21) 96490-8661</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 92732 MARCIO ESTEVÃO - (21) 96457-5898</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 107510 DA SILVA - (21) 97379-7765</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 83708 A. MENDES - (21) 97077-7378</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 105341 AZEVEDO - (22) 98705-1213</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">1º SGT PM 77614 ALZIR - (XX) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SUBTEN PM 68831 GOMES - (XX) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 94087 LOPES - (21) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 107227 MARA - (XX) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102704 J. ANDRÉ - (21) 97370-8392</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 95883 GIRARD - (21) 96428-5282</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 103727 BIZONI - (21) 96709-8524</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">2º SGT PM 85664 DENILSON - (21) 96927-5748</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">2º SGT PM 86367 REGALDINO - (XX) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 109510 MAGANO - (21) 95933-0250</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 107541 DENIS - (21) 99164-1117</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110470 TELES - (21) 97728-7457</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 93081 GUEDES - (21) 96573-4932</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">2º SGT PM 85426 BRITO - (21) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SUBTEN PM 76452 WAGNER - (21) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 92119 CAIO - (21) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 99226 M. JUNIOR - (21) 96975-7501</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SD PM 110435 S. RIBEIRO - (22) 99943-7645</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 103051 TIRADENTES - (22) 99716-2034</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 104291 FELIX - (22) 96464-9977</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 108292 JULIANO - (21) 98367-3231</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 101752 TRINDADE - (21) 98776-1646</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 105507 ALISSON - (21) 99754-8077</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 108824 CARMO - (21) 99690-1647</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 107805 M. PAULO - (21) 97605-8456</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 108190 UERBERT - (21) 99852-1847</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 98339 SOUZA - (21) 99638-0102</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">SUBTEN PM 70372 MENDES - (21) 97250-5349</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 98596 VIDAL - (21) 99520-1781</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">CB PM 102190 D. SILVA - (32) 98841-5933</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 100228 MIRANDA - (21) 97012-9054</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 99791 ALMEIDA - (21) 96402-3724</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">2º SGT PM 85995 VINICIUS - (XX) XXXXX-XXXX</li>
-	<li><img src="img/boneco_policial.png" alt="Foto do xx" class="profile-pic">3º SGT PM 91049 JHONATHAN - (XX) XXXXX-XXXX</li>
-    </ul>
+<div class="cards-container" id="cards"></div>
+<div style="max-width:500px;margin:10px auto;display:flex;gap:10px;">
+  <select id="filtro-posto" style="flex:1;padding:10px;border-radius:8px;">
+    <option value="">Todos os postos</option>
+    <option value="SD">SD</option>
+    <option value="CB">CB</option>
+    <option value="SGT">SGT</option>
+  </select>
 
-    <script src="script.js"></script>
+  <button id="toggle-theme" style="padding:10px;border-radius:8px;cursor:pointer;">
+    🌙
+  </button>
+</div>
+
+<footer>
+  Total de policiais: <strong id="total"></strong>
+</footer>
+
+<script>
+const policiais = [
+  {
+    nome: "R. Simões",
+    posto: "3º SGT",
+    matricula: "94010",
+    telefone: "21982539175",
+    foto: "img/rodrigo.png"
+  },
+  {
+    nome: "Alacrino",
+    posto: "3º SGT",
+    matricula: "100000",
+    telefone: "21965769875",
+    foto: "img/alacrino.png"
+  },
+  {
+    nome: "Dan",
+    posto: "3º SGT",
+    matricula: "97196",
+    telefone: "21964827877",
+    foto: "img/dan.png"
+  },
+  {
+    nome: "Pinheiro",
+    posto: "CB",
+    matricula: "104953",
+    telefone: "21993471036",
+    foto: "img/pinheiro.png"
+  },
+{
+    nome: "Gouvêa",
+    posto: "CB",
+    matricula: "105131",
+    telefone: "21998231200",
+    foto: "img/gouveia.png"
+  },
+{
+    nome: "Gabriel",
+    posto: "3º SGT",
+    matricula: "92759",
+    telefone: "21964287665",
+    foto: "img/gabriel.png"
+  },
+{
+    nome: "Triumpho",
+    posto: "SD",
+    matricula: "109908",
+    telefone: "21964844022",
+    foto: "img/triumpho.png"
+  },
+{
+    nome: "Lacerda",
+    posto: "3º SGT",
+    matricula: "95837",
+    telefone: "21",
+    foto: "img/lacerda.png"
+  },
+{
+    nome: "Andressa",
+    posto: "SD",
+    matricula: "110800",
+    telefone: "21974949605",
+    foto: "img/andreza.jpg"
+  },
+{
+    nome: "F. Abreu",
+    posto: "3º SGT",
+    matricula: "93168",
+    telefone: "21981867018",
+    foto: "img/f_abreu.png"
+  },
+{
+    nome: "De Souza",
+    posto: "CB",
+    matricula: "105248",
+    telefone: "21987958625",
+    foto: "img/de_souza.png"
+  },
+{
+    nome: "Pinna",
+    posto: "3º SGT",
+    matricula: "90303",
+    telefone: "21964590951",
+    foto: "img/pinna.png"
+  },
+{
+    nome: "Cabral",
+    posto: "3º SGT",
+    matricula: "100348",
+    telefone: "21964995943",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Cleison",
+    posto: "3º SGT",
+    matricula: "96990",
+    telefone: "24998599248",
+    foto: "img/cleison.png"
+  },
+{
+    nome: "Fully",
+    posto: "3º SGT",
+    matricula: "95629",
+    telefone: "21972738628",
+    foto: "img/fully.png"
+  },
+{
+    nome: "Gegundo",
+    posto: "3º SGT",
+    matricula: "97778",
+    telefone: "21982520140",
+    foto: "img/gegundo.png"
+  },
+{
+    nome: "Machado",
+    posto: "3º SGT",
+    matricula: "99164",
+    telefone: "21964402142",
+    foto: "img/r_machado.png"
+  },
+{
+    nome: "Joaquim",
+    posto: "CB",
+    matricula: "102712",
+    telefone: "21964721739",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Dias",
+    posto: "3º SGT",
+    matricula: "91071",
+    telefone: "21964415591",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Édvan",
+    posto: "CB",
+    matricula: "108677",
+    telefone: "21989548941",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "S. Alves",
+    posto: "CB",
+    matricula: "103630",
+    telefone: "21964174412",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Camilo",
+    posto: "CB",
+    matricula: "109067",
+    telefone: "24988150463",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Soares",
+    posto: "CB",
+    matricula: "106348",
+    telefone: "22998067454",
+    foto: "img/soares.png"
+  },
+{
+    nome: "L. Silva",
+    posto: "CB",
+    matricula: "106467",
+    telefone: "24992337100",
+    foto: "img/l_silva.png"
+  },
+{
+    nome: "Mariano",
+    posto: "SD",
+    matricula: "109738",
+    telefone: "21976083720",
+    foto: "img/mariano.png"
+  },
+{
+    nome: "Ivan",
+    posto: "3º SGT",
+    matricula: "88391",
+    telefone: "21964372346",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "George",
+    posto: "CB",
+    matricula: "103056",
+    telefone: "21981758555",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Garcia",
+    posto: "3º SGT",
+    matricula: "93491",
+    telefone: "21984107792",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "S. Lemos",
+    posto: "3º SGT",
+    matricula: "101823",
+    telefone: "21986828494",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Conde",
+    posto: "3º SGT",
+    matricula: "91131",
+    telefone: "21986584062",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "R. Alcantara",
+    posto: "3º SGT",
+    matricula: "91665",
+    telefone: "21965040543",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Domingos",
+    posto: "3º SGT",
+    matricula: "92258",
+    telefone: "21964910948",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Santos",
+    posto: "3º SGT",
+    matricula: "93408",
+    telefone: "21969573154",
+    foto: "img/santos.png"
+  },
+{
+    nome: "Nascimento",
+    posto: "3º SGT",
+    matricula: "98408",
+    telefone: "xxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "A. Alcantara",
+    posto: "3º SGT",
+    matricula: "93606",
+    telefone: "21964244240",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "L. Francisco",
+    posto: "3º SGT",
+    matricula: "93341",
+    telefone: "21965216019",
+    foto: "img/l_francisco.png"
+  },
+{
+    nome: "Santos",
+    posto: "2º SGT",
+    matricula: "85458",
+    telefone: "21969555411",
+    foto: "img/sgt_santos.png"
+  },
+{
+    nome: "De Alvarenga",
+    posto: "CB",
+    matricula: "104060",
+    telefone: "0077481603",
+    foto: "img/de_alvarenga.png"
+  },
+{
+    nome: "Érica",
+    posto: "SD",
+    matricula: "110796",
+    telefone: "21976699905",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Freitas",
+    posto: "3º SGT",
+    matricula: "97129",
+    telefone: "21992870704",
+    foto: "img/freitas.png"
+  },
+{
+    nome: "Leimar",
+    posto: "3º SGT",
+    matricula: "92646",
+    telefone: "24988341226",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Buharb",
+    posto: "CB",
+    matricula: "104839",
+    telefone: "21997343563",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Magiolo",
+    posto: "CB",
+    matricula: "xxxxxx",
+    telefone: "24992702200",
+    foto: "img/magiolo.png"
+  },
+{
+    nome: "Jonatha",
+    posto: "3º SGT",
+    matricula: "96003",
+    telefone: "22999257764",
+    foto: "img/jonatha.png"
+  },
+{
+    nome: "Rodrigues",
+    posto: "3º SGT",
+    matricula: "96287",
+    telefone: "22992903559",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Caique",
+    posto: "CB",
+    matricula: "106037",
+    telefone: "21975473746",
+    foto: "img/caique.png"
+  },
+{
+    nome: "Henrique",
+    posto: "CB",
+    matricula: "105391",
+    telefone: "2196661392",
+    foto: "img/henrique.png"
+  },
+{
+    nome: "Eduardo Sousa D",
+    posto: "CB",
+    matricula: "108664",
+    telefone: "21970189816",
+    foto: "img/eduardo_sousa_d.png"
+  },
+{
+    nome: "Cristiano",
+    posto: "3º SGT",
+    matricula: "98202",
+    telefone: "24981280011",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Alessandro Gomes",
+    posto: "CB",
+    matricula: "108023",
+    telefone: "21974117187",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Barreto",
+    posto: "3º SGT",
+    matricula: "101276",
+    telefone: "22999939886",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "F. Ribeiro",
+    posto: "CB",
+    matricula: "105377",
+    telefone: "22974025744",
+    foto: "img/f_ribeiro.png"
+  },
+{
+    nome: "Bessa",
+    posto: "3º SGT",
+    matricula: "94686",
+    telefone: "21969356259",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Souza",
+    posto: "3º SGT",
+    matricula: "98607",
+    telefone: "21964557540",
+    foto: "img/souza_p2.png"
+  },
+{
+    nome: "J. Marcelo",
+    posto: "SUBTEN",
+    matricula: "66381",
+    telefone: "21966584062",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Josué",
+    posto: "SD",
+    matricula: "110387",
+    telefone: "22998867687",
+    foto: "img/josue.png"
+  },
+{
+    nome: "Valim",
+    posto: "3º SGT",
+    matricula: "92490",
+    telefone: "21971011575",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Matheus",
+    posto: "CB",
+    matricula: "106650",
+    telefone: "24999288510",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Laia",
+    posto: "CB",
+    matricula: "105374",
+    telefone: "21979497566",
+    foto: "img/laia.png"
+  },
+{
+    nome: "Silveira",
+    posto: "3º SGT",
+    matricula: "96541",
+    telefone: "21964175093",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Cardodo",
+    posto: "3º SGT",
+    matricula: "93752",
+    telefone: "21998264004",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "L. Barbosa",
+    posto: "SD",
+    matricula: "110297",
+    telefone: "21991869919",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Rangel",
+    posto: "CB",
+    matricula: "105375",
+    telefone: "21990454574",
+    foto: "img/rangel.png"
+  },
+{
+    nome: "De Paula",
+    posto: "3º SGT",
+    matricula: "99488",
+    telefone: "24998426337",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Ulisses",
+    posto: "3º SGT",
+    matricula: "100360",
+    telefone: "21986387179",
+    foto: "img/ulisses.png"
+  },
+{
+    nome: "Jonathan Dos Santos",
+    posto: "CB",
+    matricula: "108786",
+    telefone: "21982572969",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Magno",
+    posto: "CB",
+    matricula: "105600",
+    telefone: "21969172847",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "R. Araújo",
+    posto: "3º SGT",
+    matricula: "102861",
+    telefone: "21970185844",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "William",
+    posto: "3º SGT",
+    matricula: "101839",
+    telefone: "21964240437",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Silva",
+    posto: "CB",
+    matricula: "104282",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Coutinho",
+    posto: "CB",
+    matricula: "107561",
+    telefone: "21975708723",
+    foto: "img/coutinho.png"
+  },
+{
+    nome: "T. Rodrigues",
+    posto: "CB",
+    matricula: "107520",
+    telefone: "21984798140",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Miqueline",
+    posto: "CB",
+    matricula: "105313",
+    telefone: "21969183138",
+    foto: "img/miqueline.png"
+  },
+{
+    nome: "M. Araújo",
+    posto: "CB",
+    matricula: "106351",
+    telefone: "21982766602",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Cardoso",
+    posto: "3º SGT",
+    matricula: "99199",
+    telefone: "21968072899",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Ferreira",
+    posto: "3º SGT",
+    matricula: "93331",
+    telefone: "21964317876",
+    foto: "img/ferreira.png"
+  },
+{
+    nome: "Lemos",
+    posto: "3º SGT",
+    matricula: "99133",
+    telefone: "964293048",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Malaquias",
+    posto: "3º SGT",
+    matricula: "95714",
+    telefone: "21969776346",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "R. Filho",
+    posto: "CB",
+    matricula: "105249",
+    telefone: "21970072545",
+    foto: "img/r_filho.png"
+  },
+{
+    nome: "Cortez",
+    posto: "CB",
+    matricula: "106533",
+    telefone: "21997773565",
+    foto: "img/cortez.png"
+  },
+{
+    nome: "R. Lacerda",
+    posto: "3º SGT",
+    matricula: "100032",
+    telefone: "21970297523",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Johnathan",
+    posto: "3º SGT",
+    matricula: "98121",
+    telefone: "21964675646",
+    foto: "img/johnathan.png"
+  },
+{
+    nome: "Junior",
+    posto: "3º SGT",
+    matricula: "102181",
+    telefone: "21965845525",
+    foto: "img/junior.png"
+  },
+{
+    nome: "Juliana Guedes",
+    posto: "CB",
+    matricula: "105769",
+    telefone: "21979860216",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Marcos",
+    posto: "CB",
+    matricula: "106561",
+    telefone: "21999954971",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Baptista",
+    posto: "CB",
+    matricula: "106260",
+    telefone: "21987347572",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Bruno Bianchi G",
+    posto: "SD",
+    matricula: "109414",
+    telefone: "21988766548",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "D. Santos",
+    posto: "SD",
+    matricula: "110433",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Isaías",
+    posto: "2º SGT",
+    matricula: "86615",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Peres",
+    posto: "3º SGT",
+    matricula: "93998",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Italo",
+    posto: "3º SGT",
+    matricula: "91115",
+    telefone: "21977049221",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Rodrigues",
+    posto: "SD",
+    matricula: "109109",
+    telefone: "21983634551",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Adriel",
+    posto: "3º SGT",
+    matricula: "99242",
+    telefone: "21999955368",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Camelo",
+    posto: "SD",
+    matricula: "109754",
+    telefone: "21975556121",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Da Silva",
+    posto: "CB",
+    matricula: "104197",
+    telefone: "21979454227",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Charles",
+    posto: "3º SGT",
+    matricula: "91783",
+    telefone: "21964908661",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Marcio Estevão",
+    posto: "3º SGT",
+    matricula: "92732",
+    telefone: "21964575898",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Da Silva",
+    posto: "CB",
+    matricula: "107510",
+    telefone: "21973797765",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "A. Mendes",
+    posto: "2º SGT",
+    matricula: "83708",
+    telefone: "21970777378",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Azevedo",
+    posto: "CB",
+    matricula: "105341",
+    telefone: "22987051213",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Alzir",
+    posto: "1º SGT",
+    matricula: "77614",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Gomes",
+    posto: "SUBTEN",
+    matricula: "68831",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Lopes",
+    posto: "3º SGT",
+    matricula: "94087",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Mara",
+    posto: "CB",
+    matricula: "107227",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "J. André",
+    posto: "CB",
+    matricula: "102704",
+    telefone: "21973708392",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Girard",
+    posto: "3º SGT",
+    matricula: "95883",
+    telefone: "21964285282",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Bizoni",
+    posto: "CB",
+    matricula: "103727",
+    telefone: "21967098524",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Denilson",
+    posto: "2º SGT",
+    matricula: "85664",
+    telefone: "21969275748",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Regaldino",
+    posto: "2º SGT",
+    matricula: "86367",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Magano",
+    posto: "SD",
+    matricula: "109510",
+    telefone: "21959330250",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Denis",
+    posto: "CB",
+    matricula: "107541",
+    telefone: "21991641117",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Teles",
+    posto: "SD",
+    matricula: "110470",
+    telefone: "21977287457",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Guedes",
+    posto: "3º SGT",
+    matricula: "93081",
+    telefone: "21965734932",
+    foto: "img/guedes.png"
+  },
+{
+    nome: "Brito",
+    posto: "2º SGT",
+    matricula: "85426",
+    telefone: "xxxxxxxx",
+    foto: "img/brito.png"
+  },
+{
+    nome: "Wagner",
+    posto: "SubTen",
+    matricula: "76452",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Caio",
+    posto: "3º SGT",
+    matricula: "92119",
+    telefone: "21964169731",
+    foto: "img/caio.png"
+  },
+{
+    nome: "M. Junior",
+    posto: "3º SGT",
+    matricula: "99226",
+    telefone: "21969757501",
+    foto: "img/m_junior.png"
+  },
+{
+    nome: "S. Ribeiro",
+    posto: "SD",
+    matricula: "110435",
+    telefone: "22999437645",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Tiradentes",
+    posto: "CB",
+    matricula: "103051",
+    telefone: "22997162034",
+    foto: "img/tiradentes.png"
+  },
+{
+    nome: "Felix",
+    posto: "CB",
+    matricula: "104291",
+    telefone: "22964649977",
+    foto: "img/felix.png"
+  },
+{
+    nome: "Juliano",
+    posto: "CB",
+    matricula: "108292",
+    telefone: "21983673231",
+    foto: "img/juliano.png"
+  },
+{
+    nome: "Trindade",
+    posto: "CB",
+    matricula: "101752",
+    telefone: "21987761646",
+    foto: "img/trindade.png"
+  },
+{
+    nome: "Alisson",
+    posto: "CB",
+    matricula: "105507",
+    telefone: "21997548077",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Carmo",
+    posto: "CB",
+    matricula: "108824",
+    telefone: "21996901647",
+    foto: "img/xxxxx.png"
+  },
+{
+    nome: "M. Paulo",
+    posto: "CB",
+    matricula: "107805",
+    telefone: "21976058456",
+    foto: "img/m_paulo.png"
+  },
+{
+    nome: "Uerbert",
+    posto: "CB",
+    matricula: "108190",
+    telefone: "21998521847",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Souza",
+    posto: "3º SGT",
+    matricula: "98339",
+    telefone: "21996380102",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Mendes",
+    posto: "SubTen",
+    matricula: "70372",
+    telefone: "21972505349",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "Vidal",
+    posto: "3º SGT",
+    matricula: "98596",
+    telefone: "21995201781",
+    foto: "img/vidal.png"
+  },
+{
+    nome: "D. Silva",
+    posto: "CB",
+    matricula: "102190",
+    telefone: "32988415933",
+    foto: "img/d_silva.png"
+  },
+{
+    nome: "Miranda",
+    posto: "3º SGT",
+    matricula: "100228",
+    telefone: "21970129054",
+    foto: "img/miranda.png"
+  },
+{
+    nome: "Almeida",
+    posto: "3º SGT",
+    matricula: "99791",
+    telefone: "21964023724",
+    foto: "img/almeida.png"
+  },
+{
+    nome: "Vinicius",
+    posto: "2º SGT",
+    matricula: "85995",
+    telefone: "xxxxxxxxx",
+    foto: "img/vinicius.png"
+  },
+{
+    nome: "Jhonathan",
+    posto: "3º SGT",
+    matricula: "91049",
+    telefone: "xxxxxxxxx",
+    foto: "img/boneco_policial.png"
+  },
+{
+    nome: "xxxxx",
+    posto: "xx",
+    matricula: "xxxxxx",
+    telefone: "xxxxxxxxx",
+    foto: "img/xxxxx.png"
+  },
+{
+    nome: "xxxxx",
+    posto: "xx",
+    matricula: "xxxxxx",
+    telefone: "xxxxxxxxx",
+    foto: "img/xxxxx.png"
+  },
+{
+    nome: "xxxxx",
+    posto: "xx",
+    matricula: "xxxxxx",
+    telefone: "xxxxxxxxx",
+    foto: "img/xxxxx.png"
+  },
+{
+    nome: "xxxxx",
+    posto: "xx",
+    matricula: "xxxxxx",
+    telefone: "xxxxxxxxx",
+    foto: "img/xxxxx.png"
+  },
+
+
+];
+
+const container = document.getElementById("cards");
+const total = document.getElementById("total");
+const noResults = document.getElementById("no-results");
+
+function render(lista) {
+  container.innerHTML = "";
+
+  if (lista.length === 0) {
+    noResults.style.display = "block";
+    return;
+  }
+
+  noResults.style.display = "none";
+
+  lista.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <img src="${p.foto}" alt="${p.nome}">
+        <div class="info">
+          <strong>${p.posto} PM ${p.matricula}</strong>
+          <span>${p.nome}</span>
+          <a href="tel:${p.telefone}">${formatarTelefone(p.telefone)}</a>
+        </div>
+      </div>
+    `;
+  });
+
+  total.textContent = lista.length;
+}
+
+function formatarTelefone(tel) {
+  return tel.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+}
+
+document.getElementById("search-input").addEventListener("input", e => {
+  const termo = e.target.value.toLowerCase();
+
+  const filtrados = policiais.filter(p =>
+    p.nome.toLowerCase().includes(termo) ||
+    p.matricula.includes(termo)
+  );
+
+  render(filtrados);
+});
+
+render(policiais);
+</script>
+
 </body>
-
 </html>
