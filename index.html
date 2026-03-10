@@ -1,1156 +1,550 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Buscador de PPMM</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Operacional - 3ª UPP Pavão</title>
+    <link rel="shortcut icon" type="imagex/png" href="../IMAGENS/caveira.ico">
 
-<style>
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f2f4f8;
-  margin: 0;
-  padding: 20px;
-}
+    <style>
+        :root {
+            --azul-pmerj: #002d5e;
+            --azul-claro: #0056b3;
+            --branco: #ffffff;
+            --cinza-fundo: #f2f4f8;
+            --sucesso-whatsapp: #25d366;
+            --amarelo-servico: #ffc107;
+            --texto: #333333;
+        }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+        /* Variáveis do Modo Noturno */
+        body.dark-mode {
+            --azul-pmerj: #001a36;
+            --branco: #1e1e1e;
+            --cinza-fundo: #121212;
+            --texto: #e0e0e0;
+        }
 
-.search-container {
-  max-width: 500px;
-  margin: 0 auto 20px auto;
-}
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--cinza-fundo);
+            color: var(--texto);
+            margin: 0;
+            padding: 20px;
+            padding-top: 260px;
+            transition: background 0.5s, color 0.5s;
+        }
 
-.search-container input {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--azul-pmerj);
+            color: white;
+            z-index: 1000;
+            padding: 10px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
 
-#no-results {
-  text-align: center;
-  margin-top: 20px;
-  color: #c00;
-  display: none;
-}
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
 
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 15px;
-}
+        .logo { width: 40px; height: auto; transition: transform 0.2s; }
+        .logo:hover { transform: scale(1.1); filter: drop-shadow(0 0 5px #ffd700); }
 
-.card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,.1);
-  transition: transform .2s, box-shadow .2s;
-}
+        #theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.2s;
+            position: absolute;
+            right: 20px;
+        }
+        #theme-toggle:hover { transform: scale(1.1); }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,.2);
-}
+        .controls-container { max-width: 850px; margin: 0 auto; padding: 0 20px; }
 
-.card img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ddd;
-}
+        .search-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .search-row input, .search-row select {
+            padding: 12px 20px; border-radius: 25px; border: none; outline: none; font-size: 16px;
+        }
+        .search-row input { flex: 3; }
+        .search-row select { flex: 1; cursor: pointer; font-weight: bold; color: var(--azul-pmerj); }
 
-.info strong {
-  display: block;
-  font-size: 14px;
-}
+        .btn-clear {
+            background: #dc3545; color: white; border: none; border-radius: 25px;
+            padding: 0 20px; cursor: pointer; font-weight: bold; transition: opacity 0.2s;
+        }
+        .btn-clear:hover { opacity: 0.8; }
 
-.info span {
-  display: block;
-  font-size: 16px;
-  margin: 3px 0;
-}
+        .on-duty-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px; border-radius: 8px;
+            display: flex; justify-content: center; gap: 20px;
+            font-size: 0.85rem; flex-wrap: wrap;
+        }
 
-.info a {
-  text-decoration: none;
-  color: #0077cc;
-  font-weight: bold;
-}
+        .duty-badge { background: var(--amarelo-servico); color: #000; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        .editable-name {
+            background: rgba(255,255,255,0.15); border: 1px dashed #fff;
+            padding: 3px 10px; border-radius: 4px; cursor: pointer;
+            min-width: 140px; text-align: center;
+        }
 
-footer {
-  text-align: center;
-  margin-top: 30px;
-  font-size: 14px;
-  color: #666;
-}
+        .cards-container {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px; max-width: 1200px; margin: 0 auto;
+        }
 
-.logo {
-    width: 50px;
-    align-items: center;
-    vertical-align: middle;
-    margin-right: 10px;
-}
-</style>
+        .card {
+            background: var(--branco); border-radius: 8px; padding: 15px;
+            display: flex; gap: 15px; align-items: center;
+            border-left: 6px solid var(--azul-pmerj);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative; 
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        /* EFEITO HOVER ADICIONADO AQUI */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .card.em-plantao {
+            border-left: 8px solid var(--amarelo-servico);
+            background: rgba(255, 193, 7, 0.05);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+        }
+
+        /* EFEITO HOVER PARA QUEM ESTÁ EM PLANTÃO */
+        .card.em-plantao:hover {
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        .card.em-plantao::after {
+            content: "NO PLANTÃO"; position: absolute; top: 5px; right: 10px;
+            font-size: 0.6rem; background: var(--amarelo-servico);
+            color: #000; padding: 2px 6px; border-radius: 4px; font-weight: bold;
+        }
+
+        .card img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd; cursor: pointer; transition: transform 0.2s; }
+        .card img:hover { transform: scale(1.05); }
+        
+        .info strong { color: var(--azul-pmerj); font-size: 0.85rem; display: block; }
+        .info span { font-size: 1.1rem; font-weight: bold; text-transform: uppercase; color: var(--texto); }
+        .gpp-tag { font-size: 0.75rem; color: #777; }
+
+        .contact-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-call { text-decoration: none; color: var(--texto); font-weight: bold; font-size: 0.9rem; }
+        .btn-whatsapp {
+            background: var(--sucesso-whatsapp); color: white; padding: 6px 12px;
+            border-radius: 20px; text-decoration: none; font-size: 0.8rem; font-weight: bold;
+        }
+
+        .no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: #888; }
+        
+        .modal {
+            display: none; position: fixed; z-index: 2000; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            justify-content: center; align-items: center;
+        }
+        .modal-content { max-width: 90%; max-height: 80%; border: 4px solid white; border-radius: 8px; }
+
+        footer { text-align: center; margin-top: 40px; padding: 20px; color: #888; border-top: 1px solid #ddd; }
+    </style>
 </head>
-
 <body>
 
-<div><h1 align="center"><img src="img/logo_pmerj.png" alt="logo_pmerj" class="logo">Lista de Nomes - 3ª UPP/19ºBPM - CIA UPP PAVÃO</h1></div>
-
-<div class="search-container">
-  <input type="text" id="search-input" placeholder="Buscar por nome ou matrícula...">
-</div>
-
-<p id="no-results">Nenhum nome encontrado.</p>
-
-<div class="cards-container" id="cards"></div>
-<div style="max-width:500px;margin:10px auto;display:flex;gap:10px;">
-  <select id="filtro-posto" style="flex:1;padding:10px;border-radius:8px;">
-    <option value="">Todos os postos</option>
-    <option value="SD">SD</option>
-    <option value="CB">CB</option>
-    <option value="SGT">SGT</option>
-  </select>
-
-  <button id="toggle-theme" style="padding:10px;border-radius:8px;cursor:pointer;">
-    🌙
-  </button>
-</div>
-
-<footer>
-  Total de policiais: <strong id="total"></strong>
-</footer>
-
-<script>
-const policiais = [
-  {
-    nome: "R. Simões",
-    posto: "3º SGT",
-    matricula: "94010",
-    telefone: "21982539175",
-    foto: "img/rodrigo.png"
-  },
-  {
-    nome: "Alacrino",
-    posto: "3º SGT",
-    matricula: "100000",
-    telefone: "21965769875",
-    foto: "img/alacrino.png"
-  },
-  {
-    nome: "Dan",
-    posto: "3º SGT",
-    matricula: "97196",
-    telefone: "21964827877",
-    foto: "img/dan.png"
-  },
-  {
-    nome: "Pinheiro",
-    posto: "CB",
-    matricula: "104953",
-    telefone: "21993471036",
-    foto: "img/pinheiro.png"
-  },
-{
-    nome: "Gouvêa",
-    posto: "CB",
-    matricula: "105131",
-    telefone: "21998231200",
-    foto: "img/gouveia.png"
-  },
-{
-    nome: "Gabriel",
-    posto: "3º SGT",
-    matricula: "92759",
-    telefone: "21964287665",
-    foto: "img/gabriel.png"
-  },
-{
-    nome: "Triumpho",
-    posto: "SD",
-    matricula: "109908",
-    telefone: "21964844022",
-    foto: "img/triumpho.png"
-  },
-{
-    nome: "Lacerda",
-    posto: "3º SGT",
-    matricula: "95837",
-    telefone: "21",
-    foto: "img/lacerda.png"
-  },
-{
-    nome: "Andressa",
-    posto: "SD",
-    matricula: "110800",
-    telefone: "21974949605",
-    foto: "img/andreza.jpg"
-  },
-{
-    nome: "F. Abreu",
-    posto: "3º SGT",
-    matricula: "93168",
-    telefone: "21981867018",
-    foto: "img/f_abreu.png"
-  },
-{
-    nome: "De Souza",
-    posto: "CB",
-    matricula: "105248",
-    telefone: "21987958625",
-    foto: "img/de_souza.png"
-  },
-{
-    nome: "Pinna",
-    posto: "3º SGT",
-    matricula: "90303",
-    telefone: "21964590951",
-    foto: "img/pinna.png"
-  },
-{
-    nome: "Cabral",
-    posto: "3º SGT",
-    matricula: "100348",
-    telefone: "21964995943",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Cleison",
-    posto: "3º SGT",
-    matricula: "96990",
-    telefone: "24998599248",
-    foto: "img/cleison.png"
-  },
-{
-    nome: "Fully",
-    posto: "3º SGT",
-    matricula: "95629",
-    telefone: "21972738628",
-    foto: "img/fully.png"
-  },
-{
-    nome: "Gegundo",
-    posto: "3º SGT",
-    matricula: "97778",
-    telefone: "21982520140",
-    foto: "img/gegundo.png"
-  },
-{
-    nome: "Machado",
-    posto: "3º SGT",
-    matricula: "99164",
-    telefone: "21964402142",
-    foto: "img/r_machado.png"
-  },
-{
-    nome: "Joaquim",
-    posto: "CB",
-    matricula: "102712",
-    telefone: "21964721739",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Dias",
-    posto: "3º SGT",
-    matricula: "91071",
-    telefone: "21964415591",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Édvan",
-    posto: "CB",
-    matricula: "108677",
-    telefone: "21989548941",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "S. Alves",
-    posto: "CB",
-    matricula: "103630",
-    telefone: "21964174412",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Camilo",
-    posto: "CB",
-    matricula: "109067",
-    telefone: "24988150463",
-    foto: "img/camilo.png"
-  },
-{
-    nome: "Soares",
-    posto: "CB",
-    matricula: "106348",
-    telefone: "22998067454",
-    foto: "img/soares.png"
-  },
-{
-    nome: "L. Silva",
-    posto: "CB",
-    matricula: "106467",
-    telefone: "24992337100",
-    foto: "img/l_silva.png"
-  },
-{
-    nome: "Mariano",
-    posto: "SD",
-    matricula: "109738",
-    telefone: "21976083720",
-    foto: "img/mariano.png"
-  },
-{
-    nome: "Ivan",
-    posto: "3º SGT",
-    matricula: "88391",
-    telefone: "21964372346",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "George",
-    posto: "CB",
-    matricula: "103056",
-    telefone: "21981758555",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Garcia",
-    posto: "3º SGT",
-    matricula: "93491",
-    telefone: "21984107792",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "S. Lemos",
-    posto: "3º SGT",
-    matricula: "101823",
-    telefone: "21986828494",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Conde",
-    posto: "3º SGT",
-    matricula: "91131",
-    telefone: "21986584062",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "R. Alcantara",
-    posto: "3º SGT",
-    matricula: "91665",
-    telefone: "21965040543",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Domingos",
-    posto: "3º SGT",
-    matricula: "92258",
-    telefone: "21964910948",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Santos",
-    posto: "3º SGT",
-    matricula: "93408",
-    telefone: "21969573154",
-    foto: "img/santos.png"
-  },
-{
-    nome: "Nascimento",
-    posto: "3º SGT",
-    matricula: "98408",
-    telefone: "xxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "A. Alcantara",
-    posto: "3º SGT",
-    matricula: "93606",
-    telefone: "21964244240",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "L. Francisco",
-    posto: "3º SGT",
-    matricula: "93341",
-    telefone: "21965216019",
-    foto: "img/l_francisco.png"
-  },
-{
-    nome: "Santos",
-    posto: "2º SGT",
-    matricula: "85458",
-    telefone: "21969555411",
-    foto: "img/sgt_santos.png"
-  },
-{
-    nome: "De Alvarenga",
-    posto: "CB",
-    matricula: "104060",
-    telefone: "0077481603",
-    foto: "img/de_alvarenga.png"
-  },
-{
-    nome: "Érica",
-    posto: "SD",
-    matricula: "110796",
-    telefone: "21976699905",
-    foto: "img/erica.png"
-  },
-{
-    nome: "Freitas",
-    posto: "3º SGT",
-    matricula: "97129",
-    telefone: "21992870704",
-    foto: "img/freitas.png"
-  },
-{
-    nome: "Leimar",
-    posto: "3º SGT",
-    matricula: "92646",
-    telefone: "24988341226",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Buharb",
-    posto: "CB",
-    matricula: "104839",
-    telefone: "21997343563",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Magiolo",
-    posto: "CB",
-    matricula: "xxxxxx",
-    telefone: "24992702200",
-    foto: "img/magiolo.png"
-  },
-{
-    nome: "Jonatha",
-    posto: "3º SGT",
-    matricula: "96003",
-    telefone: "22999257764",
-    foto: "img/jonatha.png"
-  },
-{
-    nome: "Rodrigues",
-    posto: "3º SGT",
-    matricula: "96287",
-    telefone: "22992903559",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Caique",
-    posto: "CB",
-    matricula: "106037",
-    telefone: "21975473746",
-    foto: "img/caique.png"
-  },
-{
-    nome: "Henrique",
-    posto: "CB",
-    matricula: "105391",
-    telefone: "2196661392",
-    foto: "img/henrique.png"
-  },
-{
-    nome: "Eduardo Sousa D",
-    posto: "CB",
-    matricula: "108664",
-    telefone: "21970189816",
-    foto: "img/eduardo_sousa_d.png"
-  },
-{
-    nome: "Cristiano",
-    posto: "3º SGT",
-    matricula: "98202",
-    telefone: "24981280011",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Alessandro Gomes",
-    posto: "CB",
-    matricula: "108023",
-    telefone: "21974117187",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Barreto",
-    posto: "3º SGT",
-    matricula: "101276",
-    telefone: "22999939886",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "F. Ribeiro",
-    posto: "CB",
-    matricula: "105377",
-    telefone: "22974025744",
-    foto: "img/f_ribeiro.png"
-  },
-{
-    nome: "Bessa",
-    posto: "3º SGT",
-    matricula: "94686",
-    telefone: "21969356259",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Souza",
-    posto: "3º SGT",
-    matricula: "98607",
-    telefone: "21964557540",
-    foto: "img/souza_p2.png"
-  },
-{
-    nome: "J. Marcelo",
-    posto: "SUBTEN",
-    matricula: "66381",
-    telefone: "21966584062",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Josué",
-    posto: "SD",
-    matricula: "110387",
-    telefone: "22998867687",
-    foto: "img/josue.png"
-  },
-{
-    nome: "Valim",
-    posto: "3º SGT",
-    matricula: "92490",
-    telefone: "21971011575",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Matheus",
-    posto: "CB",
-    matricula: "106650",
-    telefone: "24999288510",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Laia",
-    posto: "CB",
-    matricula: "105374",
-    telefone: "21979497566",
-    foto: "img/laia.png"
-  },
-{
-    nome: "Silveira",
-    posto: "3º SGT",
-    matricula: "96541",
-    telefone: "21964175093",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Cardodo",
-    posto: "3º SGT",
-    matricula: "93752",
-    telefone: "21998264004",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "L. Barbosa",
-    posto: "SD",
-    matricula: "110297",
-    telefone: "21991869919",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Rangel",
-    posto: "CB",
-    matricula: "105375",
-    telefone: "21990454574",
-    foto: "img/rangel.png"
-  },
-{
-    nome: "De Paula",
-    posto: "3º SGT",
-    matricula: "99488",
-    telefone: "24998426337",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Ulisses",
-    posto: "3º SGT",
-    matricula: "100360",
-    telefone: "21986387179",
-    foto: "img/ulisses.png"
-  },
-{
-    nome: "Jonathan Dos Santos",
-    posto: "CB",
-    matricula: "108786",
-    telefone: "21982572969",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Magno",
-    posto: "CB",
-    matricula: "105600",
-    telefone: "21969172847",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "R. Araújo",
-    posto: "3º SGT",
-    matricula: "102861",
-    telefone: "21970185844",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "William",
-    posto: "3º SGT",
-    matricula: "101839",
-    telefone: "21964240437",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Silva",
-    posto: "CB",
-    matricula: "104282",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Coutinho",
-    posto: "CB",
-    matricula: "107561",
-    telefone: "21975708723",
-    foto: "img/coutinho.png"
-  },
-{
-    nome: "T. Rodrigues",
-    posto: "CB",
-    matricula: "107520",
-    telefone: "21984798140",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Miqueline",
-    posto: "CB",
-    matricula: "105313",
-    telefone: "21969183138",
-    foto: "img/miqueline.png"
-  },
-{
-    nome: "M. Araújo",
-    posto: "CB",
-    matricula: "106351",
-    telefone: "21982766602",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Cardoso",
-    posto: "3º SGT",
-    matricula: "99199",
-    telefone: "21968072899",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Ferreira",
-    posto: "3º SGT",
-    matricula: "93331",
-    telefone: "21964317876",
-    foto: "img/ferreira.png"
-  },
-{
-    nome: "Lemos",
-    posto: "3º SGT",
-    matricula: "99133",
-    telefone: "964293048",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Malaquias",
-    posto: "3º SGT",
-    matricula: "95714",
-    telefone: "21969776346",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "R. Filho",
-    posto: "CB",
-    matricula: "105249",
-    telefone: "21970072545",
-    foto: "img/r_filho.png"
-  },
-{
-    nome: "Cortez",
-    posto: "CB",
-    matricula: "106533",
-    telefone: "21997773565",
-    foto: "img/cortez.png"
-  },
-{
-    nome: "R. Lacerda",
-    posto: "3º SGT",
-    matricula: "100032",
-    telefone: "21970297523",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Johnathan",
-    posto: "3º SGT",
-    matricula: "98121",
-    telefone: "21964675646",
-    foto: "img/johnathan.png"
-  },
-{
-    nome: "Junior",
-    posto: "3º SGT",
-    matricula: "102181",
-    telefone: "21965845525",
-    foto: "img/junior.png"
-  },
-{
-    nome: "Juliana Guedes",
-    posto: "CB",
-    matricula: "105769",
-    telefone: "21979860216",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Marcos",
-    posto: "CB",
-    matricula: "106561",
-    telefone: "21999954971",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Baptista",
-    posto: "CB",
-    matricula: "106260",
-    telefone: "21987347572",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Bruno Bianchi G",
-    posto: "SD",
-    matricula: "109414",
-    telefone: "21988766548",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "D. Santos",
-    posto: "SD",
-    matricula: "110433",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Isaías",
-    posto: "2º SGT",
-    matricula: "86615",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Peres",
-    posto: "3º SGT",
-    matricula: "93998",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Italo",
-    posto: "3º SGT",
-    matricula: "91115",
-    telefone: "21977049221",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Rodrigues",
-    posto: "SD",
-    matricula: "109109",
-    telefone: "21983634551",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Adriel",
-    posto: "3º SGT",
-    matricula: "99242",
-    telefone: "21999955368",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Camelo",
-    posto: "SD",
-    matricula: "109754",
-    telefone: "21975556121",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Da Silva",
-    posto: "CB",
-    matricula: "104197",
-    telefone: "21979454227",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Charles",
-    posto: "3º SGT",
-    matricula: "91783",
-    telefone: "21964908661",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Marcio Estevão",
-    posto: "3º SGT",
-    matricula: "92732",
-    telefone: "21964575898",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Da Silva",
-    posto: "CB",
-    matricula: "107510",
-    telefone: "21973797765",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "A. Mendes",
-    posto: "2º SGT",
-    matricula: "83708",
-    telefone: "21970777378",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Azevedo",
-    posto: "CB",
-    matricula: "105341",
-    telefone: "22987051213",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Alzir",
-    posto: "1º SGT",
-    matricula: "77614",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Gomes",
-    posto: "SUBTEN",
-    matricula: "68831",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Lopes",
-    posto: "3º SGT",
-    matricula: "94087",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Mara",
-    posto: "CB",
-    matricula: "107227",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "J. André",
-    posto: "CB",
-    matricula: "102704",
-    telefone: "21973708392",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Girard",
-    posto: "3º SGT",
-    matricula: "95883",
-    telefone: "21964285282",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Bizoni",
-    posto: "CB",
-    matricula: "103727",
-    telefone: "21967098524",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Denilson",
-    posto: "2º SGT",
-    matricula: "85664",
-    telefone: "21969275748",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Regaldino",
-    posto: "2º SGT",
-    matricula: "86367",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Magano",
-    posto: "SD",
-    matricula: "109510",
-    telefone: "21959330250",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Denis",
-    posto: "CB",
-    matricula: "107541",
-    telefone: "21991641117",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Teles",
-    posto: "SD",
-    matricula: "110470",
-    telefone: "21977287457",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Guedes",
-    posto: "3º SGT",
-    matricula: "93081",
-    telefone: "21965734932",
-    foto: "img/guedes.png"
-  },
-{
-    nome: "Brito",
-    posto: "2º SGT",
-    matricula: "85426",
-    telefone: "xxxxxxxx",
-    foto: "img/brito.png"
-  },
-{
-    nome: "Wagner",
-    posto: "SubTen",
-    matricula: "76452",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Caio",
-    posto: "3º SGT",
-    matricula: "92119",
-    telefone: "21964169731",
-    foto: "img/caio.png"
-  },
-{
-    nome: "M. Junior",
-    posto: "3º SGT",
-    matricula: "99226",
-    telefone: "21969757501",
-    foto: "img/m_junior.png"
-  },
-{
-    nome: "S. Ribeiro",
-    posto: "SD",
-    matricula: "110435",
-    telefone: "22999437645",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Tiradentes",
-    posto: "CB",
-    matricula: "103051",
-    telefone: "22997162034",
-    foto: "img/tiradente.png"
-  },
-{
-    nome: "Felix",
-    posto: "CB",
-    matricula: "104291",
-    telefone: "22964649977",
-    foto: "img/felix.png"
-  },
-{
-    nome: "Juliano",
-    posto: "CB",
-    matricula: "108292",
-    telefone: "21983673231",
-    foto: "img/juliano.png"
-  },
-{
-    nome: "Trindade",
-    posto: "CB",
-    matricula: "101752",
-    telefone: "21987761646",
-    foto: "img/trindade.png"
-  },
-{
-    nome: "Alisson",
-    posto: "CB",
-    matricula: "105507",
-    telefone: "21997548077",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Carmo",
-    posto: "CB",
-    matricula: "108824",
-    telefone: "21996901647",
-    foto: "img/xxxxx.png"
-  },
-{
-    nome: "M. Paulo",
-    posto: "CB",
-    matricula: "107805",
-    telefone: "21976058456",
-    foto: "img/m_paulo.png"
-  },
-{
-    nome: "Uerbert",
-    posto: "CB",
-    matricula: "108190",
-    telefone: "21998521847",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Souza",
-    posto: "3º SGT",
-    matricula: "98339",
-    telefone: "21996380102",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Mendes",
-    posto: "SubTen",
-    matricula: "70372",
-    telefone: "21972505349",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "Vidal",
-    posto: "3º SGT",
-    matricula: "98596",
-    telefone: "21995201781",
-    foto: "img/vidal.png"
-  },
-{
-    nome: "D. Silva",
-    posto: "CB",
-    matricula: "102190",
-    telefone: "32988415933",
-    foto: "img/d_silva.png"
-  },
-{
-    nome: "Miranda",
-    posto: "3º SGT",
-    matricula: "100228",
-    telefone: "21970129054",
-    foto: "img/miranda.png"
-  },
-{
-    nome: "Almeida",
-    posto: "3º SGT",
-    matricula: "99791",
-    telefone: "21964023724",
-    foto: "img/almeida.png"
-  },
-{
-    nome: "Vinicius",
-    posto: "2º SGT",
-    matricula: "85995",
-    telefone: "xxxxxxxxx",
-    foto: "img/vinicius.png"
-  },
-{
-    nome: "Jhonathan",
-    posto: "3º SGT",
-    matricula: "91049",
-    telefone: "xxxxxxxxx",
-    foto: "img/boneco_policial.png"
-  },
-{
-    nome: "xxxxx",
-    posto: "xx",
-    matricula: "xxxxxx",
-    telefone: "xxxxxxxxx",
-    foto: "img/xxxxx.png"
-  },
-{
-    nome: "xxxxx",
-    posto: "xx",
-    matricula: "xxxxxx",
-    telefone: "xxxxxxxxx",
-    foto: "img/xxxxx.png"
-  },
-{
-    nome: "xxxxx",
-    posto: "xx",
-    matricula: "xxxxxx",
-    telefone: "xxxxxxxxx",
-    foto: "img/xxxxx.png"
-  },
-{
-    nome: "xxxxx",
-    posto: "xx",
-    matricula: "xxxxxx",
-    telefone: "xxxxxxxxx",
-    foto: "img/xxxxx.png"
-  },
-
-
-];
-
-const container = document.getElementById("cards");
-const total = document.getElementById("total");
-const noResults = document.getElementById("no-results");
-
-function render(lista) {
-  container.innerHTML = "";
-
-  if (lista.length === 0) {
-    noResults.style.display = "block";
-    return;
-  }
-
-  noResults.style.display = "none";
-
-  lista.forEach(p => {
-    container.innerHTML += `
-      <div class="card">
-        <img src="${p.foto}" alt="${p.nome}">
-        <div class="info">
-          <strong>${p.posto} PM ${p.matricula}</strong>
-          <span>${p.nome}</span>
-          <a href="tel:${p.telefone}">${formatarTelefone(p.telefone)}</a>
+    <div class="fixed-header">
+        <div class="header-top">
+            <a href="../dashboard.html"><img src="img/logo_pmerj.png" alt="PMERJ" class="logo"></a>
+            <span style="font-weight: bold; letter-spacing: 1.5px;">3ª UPP/19ºBPM - PAINEL OPERACIONAL</span>
+            <button id="theme-toggle" onclick="toggleTheme()" title="Alternar Tema">🌙</button>
         </div>
-      </div>
-    `;
-  });
 
-  total.textContent = lista.length;
-}
+        <div class="controls-container">
+            <div class="search-row">
+                <input type="text" id="search-input" placeholder="Buscar Policial...">
+                <select id="filter-gpp">
+                    <option value="">TODOS OS SETORES</option>
+                    <option value="SUPERVISOR">SUPERVISÃO</option>
+                    <option value="PERMANENTE">PERMANÊNCIA</option>
+                    <option value="MOTORISTA">MOTORISTA</option>
+                    <option value="ADM">ADM</option>
+                    <option value="GPP I">GPP I</option>
+                    <option value="GPP II">GPP II</option>
+                    <option value="GPP III">GPP III</option>
+                    <option value="GTPP I">GTPP I</option>
+                    <option value="APOIO">APOIO - RAS</option>
+                </select>
+                <button class="btn-clear" onclick="limparBusca()" title="Limpar Filtros">✕</button>
+            </div>
 
-function formatarTelefone(tel) {
-  return tel.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-}
+            <div class="on-duty-section">
+                <div><span class="duty-badge">SUPERVISÃO:</span> <span id="duty-supervisor" class="editable-name" onclick="editarPlantao('supervisor')">...</span></div>
+                <div><span class="duty-badge">PERMANÊNCIA:</span> <span id="duty-permanente" class="editable-name" onclick="editarPlantao('permanente')">...</span></div>
+                <div id="mode-status" style="font-size: 0.7rem; color: #ffd700; margin-top: 5px; width: 100%; text-align: center;"></div>
+            </div>
+        </div>
+    </div>
 
-document.getElementById("search-input").addEventListener("input", e => {
-  const termo = e.target.value.toLowerCase();
+    <div class="cards-container" id="cards"></div>
 
-  const filtrados = policiais.filter(p =>
-    p.nome.toLowerCase().includes(termo) ||
-    p.matricula.includes(termo)
-  );
+    <div id="imageModal" class="modal" onclick="this.style.display='none'"><img class="modal-content" id="imgAmpliada"></div>
 
-  render(filtrados);
-});
+    <footer>
+        Efetivo: <strong id="total"></strong> Policiais | Modo: <span id="current-mode">Normal</span>
+    </footer>
 
-render(policiais);
-</script>
+    <script>
+        // ESCALA E CICLO
+        const supervisoresCiclo = ["SUBTEN PM J. MARCELO", "3º SGT PM ALZIR", "2º SGT PM ISAIAS", "SUBTEN PM J. MARCELO", "SUBTEN PM MENDES", "2º SGT PM ISAIAS", "2º SGT PM VINICIUS", "SUBTEN PM MENDES", "3º SGT PM ALZIR", "2º SGT PM VINICIUS"];
+        const permanentesCiclo = ["SD PM ÉRICA", "2º SGT A. MENDES", "3º SGT PM FERREIRA", "SD PM ÉRICA", "3º SGT PM GUEDES", "3º SGT PM FERREIRA", "3º SGT PM CONDE", "3º SGT PM GUEDES", "2º SGT A. MENDES", "3º SGT PM CONDE"];
+        const dataBaseEscala = new Date(2026, 1, 26, 5, 0, 0).getTime(); 
 
+        // BANCO DE DADOS
+        const policiais = [
+            { nome: "Cerqueira", posto: "COMANDANTE CAP", matricula: "87913", gpp: "ADM", telefone: "21970388663", foto: "img/boneco_policial.png" },
+            { nome: "Lobato", posto: "CAP", matricula: "104560", gpp: "ADM", telefone: "21981620293", foto: "img/104560.jpg" },
+            
+{ nome: "Alacrino", posto: "3º SGT", matricula: "100000", gpp: "RUMB", telefone: "21965769875", foto: "img/100000.jpg" },
+            { nome: "Dan", posto: "3º SGT", matricula: "97196", gpp: "RUMB", telefone: "21964827877", foto: "img/97196.jpg" },
+            { nome: "Pinheiro", posto: "CB", matricula: "104953", gpp: "RUMB", telefone: "21993471036", foto: "img/104953.jpg" },
+            { nome: "Gouvêa", posto: "CB", matricula: "105131", gpp: "RUMB", telefone: "21998231200", foto: "img/105131.jpg" },
+            { nome: "Gabriel", posto: "3º SGT", matricula: "92759", gpp: "RUMB", telefone: "21964287665", foto: "img/92759.jpg" },
+            { nome: "Triumpho", posto: "SD", matricula: "109908", gpp: "RUMB", telefone: "21964844022", foto: "img/109908.jpg" },
+            { nome: "R. Simões", posto: "3º SGT", matricula: "94010", gpp: "RUMB", telefone: "21982539175", foto: "img/94010.jpg" },
+            { nome: "Lacerda", posto: "3º SGT", matricula: "95837", gpp: "RUMB", telefone: "21964186198", foto: "img/95837.jpg" },
+            { nome: "Andressa", posto: "SD", matricula: "110800", gpp: "RUMB", telefone: "21974949605", foto: "img/110800.jpg" },
+            { nome: "Juliana Ferreira", posto: "SD", matricula: "110594", gpp: "MANUTENIDO", telefone: "21970082257", foto: "img/110594.jpg" },
+{ nome: "F. Abreu", posto: "3º SGT", matricula: "93168", gpp: "GTPP II", telefone: "21981867018", foto: "img/93168.jpg" },
+            { nome: "De Souza", posto: "CB", matricula: "105248", gpp: "GTPP II", telefone: "21987958625", foto: "img/105248.jpg" },
+            { nome: "Pinna", posto: "3º SGT", matricula: "90303", gpp: "GTPP II", telefone: "21964590951", foto: "img/90303.jpg" },
+            { nome: "Cabral", posto: "3º SGT", matricula: "100348", gpp: "GTPP III", telefone: "21964995943", foto: "img/100348.jpg" },
+            { nome: "Cleison", posto: "3º SGT", matricula: "96990", gpp: "GPP", telefone: "24998599248", foto: "img/96990.jpg" },
+            { nome: "Fully", posto: "3º SGT", matricula: "95629", gpp: "GTPP III", telefone: "21972738628", foto: "img/95629.jpg" },
+            { nome: "Gegundo", posto: "3º SGT", matricula: "97778", gpp: "GPP", telefone: "21982520140", foto: "img/97778.jpg" },
+            { nome: "R. Machado", posto: "3º SGT", matricula: "99164", gpp: "GTPP III", telefone: "21964402142", foto: "img/99164.jpg" },
+            { nome: "Joaquim", posto: "CB", matricula: "102712", gpp: "GPP", telefone: "21964721739", foto: "img/102712.jpg" },
+            { nome: "Dias", posto: "3º SGT", matricula: "91071", gpp: "GPP IV", telefone: "21964415591", foto: "img/91071.jpg" },
+            { nome: "Édvan", posto: "CB", matricula: "108677", gpp: "GPP III", telefone: "21989548941", foto: "img/108677.jpg" },
+            { nome: "S. Alves", posto: "CB", matricula: "103630", gpp: "GPP II", telefone: "21964174412", foto: "img/103630.jpg" },
+            { nome: "Camilo", posto: "CB", matricula: "109067", gpp: "GTPP I", telefone: "24988150463", foto: "img/109067.jpg" },
+            { nome: "Soares", posto: "CB", matricula: "106348", gpp: "GTPP III", telefone: "22998067454", foto: "img/106348.jpg" },
+            { nome: "L. Silva", posto: "CB", matricula: "106467", gpp: "GTPP I", telefone: "24992337100", foto: "img/106467.jpg" },
+            { nome: "L Silva", posto: "CB", matricula: "106467", gpp: "GTPP", telefone: "24992337100", foto: "img/106467+.jpg" },
+            { nome: "Mariano", posto: "SD", matricula: "109738", gpp: "GTPP I", telefone: "21976083720", foto: "img/109738.jpg" },
+            { nome: "Ivan", posto: "3º SGT", matricula: "88391", gpp: "GPP", telefone: "21964372346", foto: "img/88391.jpg" },
+            { nome: "George", posto: "CB", matricula: "103056", gpp: "GPP I", telefone: "21981758555", foto: "img/103056.jpg" },
+            { nome: "Garcia", posto: "3º SGT", matricula: "93491", gpp: "GPP I", telefone: "21984107792", foto: "img/93491.jpg" },
+            { nome: "S. Lemos", posto: "3º SGT", matricula: "101823", gpp: "GPP", telefone: "21986828494", foto: "img/101823.jpg" },
+            { nome: "Conde", posto: "3º SGT", matricula: "91131", gpp: "PERMANENTE", telefone: "21986584062", foto: "img/91131.jpg" },
+            { nome: "R. Alcantara", posto: "3º SGT", matricula: "91665", gpp: "GTPP I", telefone: "21965040543", foto: "img/91665.jpg" },
+            { nome: "Domingos", posto: "3º SGT", matricula: "92258", gpp: "GPP II", telefone: "21964910948", foto: "img/92258.jpg" },
+            { nome: "Santos", posto: "3º SGT", matricula: "93408", gpp: "GPP", telefone: "21969573154", foto: "img/93408.jpg" },
+            { nome: "Nascimento", posto: "3º SGT", matricula: "98408", gpp: "GPP", telefone: "21975524819", foto: "img/98408.jpg" },
+            { nome: "A. Alcantara", posto: "3º SGT", matricula: "93606", gpp: "GPP III", telefone: "21964244240", foto: "img/93606.jpg" },
+            { nome: "L. Francisco", posto: "3º SGT", matricula: "93341", gpp: "MOTORISTA", telefone: "21965216019", foto: "img/93341.jpg" },
+            { nome: "Santos", posto: "2º SGT", matricula: "85458", gpp: "MOTORISTA", telefone: "21969555411", foto: "img/85458.jpg" },
+            { nome: "De Alvarenga", posto: "CB", matricula: "104060", gpp: "PERMANENTE", telefone: "xxxxxxxx", foto: "img/104060.jpg" },
+            { nome: "Érica", posto: "SD", matricula: "110796", gpp: "PERMANENTE", telefone: "21976699905", foto: "img/110796.jpg" },
+            { nome: "Freitas", posto: "3º SGT", matricula: "97129", gpp: "GTPP II", telefone: "21992870704", foto: "img/97129.jpg" },
+            { nome: "Leimar", posto: "3º SGT", matricula: "92646", gpp: "GPP", telefone: "24988341226", foto: "img/92646.jpg" },
+            { nome: "Buharb", posto: "CB", matricula: "104839", gpp: "GPP", telefone: "21997343563", foto: "img/104839.jpg" },
+            { nome: "Magiolo", posto: "CB", matricula: "xxxxxx", gpp: "P2", telefone: "24992702200", foto: "img/magiolo.jpg" },
+            { nome: "Jonatha", posto: "3º SGT", matricula: "96003", gpp: "GTPP", telefone: "22999257764", foto: "img/96003.jpg" },
+            { nome: "Rodrigues", posto: "3º SGT", matricula: "96287", gpp: "GTPP", telefone: "22992903559", foto: "img/96287.jpg" },
+            { nome: "Caique", posto: "CB", matricula: "106037", gpp: "GTPP", telefone: "21975473746", foto: "img/106037.jpg" },
+            { nome: "Henrique", posto: "CB", matricula: "105391", gpp: "GTPP", telefone: "2196661392", foto: "img/105391.jpg" },
+            { nome: "Eduardo Sousa D", posto: "CB", matricula: "108664", gpp: "GPP", telefone: "21970189816", foto: "img/108664.jpg" },
+            { nome: "Cristiano", posto: "3º SGT", matricula: "98202", gpp: "GTPP", telefone: "24981280011", foto: "img/98202.jpg" },
+            { nome: "Alessandro Gomes", posto: "CB", matricula: "108023", gpp: "GPP", telefone: "21974117187", foto: "img/108023.jpg" },
+            { nome: "Barreto", posto: "3º SGT", matricula: "101276", gpp: "GPP", telefone: "22999939886", foto: "img/101276.jpg" },
+            { nome: "F. Ribeiro", posto: "CB", matricula: "105377", gpp: "GTPP", telefone: "22974025744", foto: "img/105377.jpg" },
+            { nome: "Bessa", posto: "3º SGT", matricula: "94686", gpp: "GPP", telefone: "21969356259", foto: "img/boneco_policial.png" },
+            { nome: "Souza", posto: "3º SGT", matricula: "98607", gpp: "GTPP", telefone: "21964557540", foto: "img/boneco_policial.png" },
+            { nome: "J. Marcelo", posto: "SUBTEN", matricula: "66381", gpp: "SUPERVISOR", telefone: "21966584062", foto: "img/66381.jpg" },
+            { nome: "Josué", posto: "SD", matricula: "110387", gpp: "GPP IV", telefone: "22998867687", foto: "img/110387.jpg" },
+            { nome: "Valim", posto: "3º SGT", matricula: "92490", gpp: "GPP", telefone: "21971011575", foto: "img/92490.jpg" },
+            { nome: "Matheus", posto: "CB", matricula: "106650", gpp: "GTPP", telefone: "24999288510", foto: "img/106650.jpg" },
+            { nome: "Laia", posto: "CB", matricula: "105374", gpp: "GTPP", telefone: "21979497566", foto: "img/105374.jpg" },
+            { nome: "Silveira", posto: "3º SGT", matricula: "96541", gpp: "GPP I", telefone: "21964175093", foto: "img/96541.jpg" },
+            { nome: "Cardoso", posto: "3º SGT", matricula: "93752", gpp: "GPP III", telefone: "21998264004", foto: "img/96541.jpg" },
+            { nome: "L. Barbosa", posto: "SD", matricula: "110297", gpp: "GPP I", telefone: "21991869919", foto: "img/110297.jpg" },
+            { nome: "Rangel", posto: "CB", matricula: "105375", gpp: "GTPP II", telefone: "21990454574", foto: "img/105375.jpg" },
+            { nome: "De Paula", posto: "3º SGT", matricula: "99488", gpp: "GTPP I", telefone: "24998426337", foto: "img/99488.jpg" },
+            { nome: "Ulisses", posto: "3º SGT", matricula: "100360", gpp: "GTPP II", telefone: "21986387179", foto: "img/100360.jpg" },
+            { nome: "Jonathan Dos Santos", posto: "CB", matricula: "108786", gpp: "GPP", telefone: "21982572969", foto: "img/108786.jpg" },
+            { nome: "Magno", posto: "CB", matricula: "105600", gpp: "GPP", telefone: "21969172847", foto: "img/105600.jpg" },
+            { nome: "R. Araújo", posto: "3º SGT", matricula: "102861", gpp: "GPP III", telefone: "21970185844", foto: "img/102861.jpg" },
+            { nome: "William", posto: "3º SGT", matricula: "101839", gpp: "GPP", telefone: "21964240437", foto: "img/boneco_policial.png" },
+            { nome: "Silva", posto: "CB", matricula: "104282", gpp: "GTPP", telefone: "22999564783", foto: "img/104282.jpg" },
+            { nome: "Coutinho", posto: "CB", matricula: "107561", gpp: "GPP I", telefone: "21975708723", foto: "img/107561.jpg" },
+            { nome: "T. Rodrigues", posto: "CB", matricula: "107520", gpp: "GPP I", telefone: "21984798140", foto: "img/107520.jpg" },
+            { nome: "Miqueline", posto: "CB", matricula: "105313", gpp: "GTPP", telefone: "21969183138", foto: "img/105313.jpg" },
+            { nome: "M. Araújo", posto: "CB", matricula: "106351", gpp: "GPP III", telefone: "21982766602", foto: "img/106351.jpg" },
+            { nome: "Cardoso", posto: "3º SGT", matricula: "99199", gpp: "GPP", telefone: "21968072899", foto: "img/99199.jpg" },
+            { nome: "Ferreira", posto: "3º SGT", matricula: "93331", gpp: "MOTORISTA", telefone: "21964317876", foto: "img/93331.jpg" },
+            { nome: "Lemos", posto: "3º SGT", matricula: "99133", gpp: "GPP", telefone: "964293048", foto: "img/boneco_policial.png" },
+            { nome: "Malaquias", posto: "3º SGT", matricula: "95714", gpp: "GPP IV", telefone: "21969776346", foto: "img/95714.jpg" },
+            { nome: "R. Filho", posto: "CB", matricula: "105249", gpp: "MOTORISTA", telefone: "21970072545", foto: "img/105249.jpg" },
+            { nome: "Cortez", posto: "CB", matricula: "106533", gpp: "GTPP", telefone: "21997773565", foto: "img/106533.jpg" },
+            { nome: "R. Lacerda", posto: "3º SGT", matricula: "100032", gpp: "GTPP I", telefone: "21970297523", foto: "img/100032.jpg" },
+            { nome: "Johnathan", posto: "3º SGT", matricula: "98121", gpp: "GTPP - COPA", telefone: "21964675646", foto: "img/98121.jpg" },
+            { nome: "Junior", posto: "3º SGT", matricula: "102181", gpp: "GTPP - COPA", telefone: "21965845525", foto: "img/102181.jpg" },
+            { nome: "Juliana Guedes", posto: "CB", matricula: "105769", gpp: "MANUTENÇÃO", telefone: "21979860216", foto: "img/105769.jpg" },
+            { nome: "Marcos", posto: "CB", matricula: "106561", gpp: "GPP II", telefone: "21999954971", foto: "img/106561.jpg" },
+            { nome: "Baptista", posto: "CB", matricula: "106260", gpp: "GPP I", telefone: "21987347572", foto: "img/106260.jpg" },
+            { nome: "Bruno Bianchi G", posto: "SD", matricula: "109414", gpp: "GPP V", telefone: "21988766548", foto: "img/109414.jpg" },
+            { nome: "D. Santos", posto: "SD", matricula: "110433", gpp: "GPP IV", telefone: "21964415133", foto: "img/110433.jpg" },
+            { nome: "Isaías", posto: "2º SGT", matricula: "86615", gpp: "SUPERVISOR", telefone: "21966095717", foto: "img/86615.jpg" },
+            { nome: "F. Peres", posto: "3º SGT", matricula: "93998", gpp: "GPP II", telefone: "21964544296", foto: "img/93998.jpg" },
+            { nome: "Italo", posto: "3º SGT", matricula: "91115", gpp: "GPP III", telefone: "21977049221", foto: "img/91115.jpg" },
+            { nome: "Rodrigues", posto: "SD", matricula: "109109", gpp: "GTPP II", telefone: "21983634551", foto: "img/109109.jpg" },
+            { nome: "Adriel", posto: "3º SGT", matricula: "99242", gpp: "GPP", telefone: "21999955368", foto: "img/99242.jpg" },
+            { nome: "Camelo", posto: "SD", matricula: "109754", gpp: "GPP V", telefone: "21975556121", foto: "img/109754.jpg" },
+            { nome: "Da Silva", posto: "CB", matricula: "104197", gpp: "GTPP", telefone: "21979454227", foto: "img/104197.jpg" },
+            { nome: "Charles", posto: "3º SGT", matricula: "91783", gpp: "GTPP III", telefone: "21964908661", foto: "img/91783.jpg" },
+            { nome: "Marcio Estevão", posto: "3º SGT", matricula: "92732", gpp: "GTPP III", telefone: "21964575898", foto: "img/boneco_policial.png" },
+            { nome: "Da Silva", posto: "CB", matricula: "107510", gpp: "PERMANENTE", telefone: "21973797765", foto: "img/107510.jpg" },
+            { nome: "A. Mendes", posto: "2º SGT", matricula: "83708", gpp: "PERMANENTE", telefone: "21970777378", foto: "img/83708.jpg" },
+            { nome: "Azevedo", posto: "CB", matricula: "105341", gpp: "PRESO", telefone: "22987051213", foto: "img/105341.jpg" },
+            { nome: "Alzir", posto: "1º SGT", matricula: "77614", gpp: "SUPERVISOR", telefone: "21972711724", foto: "img/77614.jpg" },
+            { nome: "Gomes", posto: "SUBTEN", matricula: "68831", gpp: "GTPP I", telefone: "21965944085", foto: "img/68831.jpg" },
+            { nome: "Lopes", posto: "3º SGT", matricula: "94087", gpp: "ADM", telefone: "xxxxxxxxx", foto: "img/boneco_policial.png" },
+            { nome: "Mara", posto: "CB", matricula: "107227", gpp: "GPP III", telefone: "xxxxxxxxx", foto: "img/boneco_policial.png" },
+            { nome: "J. André", posto: "CB", matricula: "102704", gpp: "GPP", telefone: "21973708392", foto: "img/102704.jpg" },
+            { nome: "Girard", posto: "3º SGT", matricula: "95883", gpp: "GPP", telefone: "21964285282", foto: "img/boneco_policial.png" },
+            { nome: "Bizoni", posto: "CB", matricula: "103727", gpp: "GPP II", telefone: "21967098524", foto: "img/103727.jpg" },
+            { nome: "Denilson", posto: "2º SGT", matricula: "85664", gpp: "GPP", telefone: "21969275748", foto: "img/85664.jpg" },
+            { nome: "Regaldino", posto: "2º SGT", matricula: "86367", gpp: "GPP II", telefone: "xxxxxxxxx", foto: "img/boneco_policial.png" },
+            { nome: "Magano", posto: "SD", matricula: "109510", gpp: "GPP I", telefone: "21959330250", foto: "img/109510.jpg" },
+            { nome: "Denis", posto: "CB", matricula: "107541", gpp: "RUMB", telefone: "21991641117", foto: "img/107541.jpg" },
+            { nome: "Teles", posto: "SD", matricula: "110470", gpp: "GPP I", telefone: "21977287457", foto: "img/boneco_policial.png" },
+            { nome: "Guedes", posto: "3º SGT", matricula: "93081", gpp: "PERMANENTE", telefone: "21965734932", foto: "img/93081.jpg" },
+            { nome: "Brito", posto: "2º SGT", matricula: "85426", gpp: "GPP II", telefone: "21982813420", foto: "img/85426.jpg" },
+            { nome: "Wagner", posto: "SubTen", matricula: "76452", gpp: "PERMANENTE", telefone: "21999910259", foto: "img/boneco_policial.png" },
+            { nome: "Caio", posto: "3º SGT", matricula: "92119", gpp: "MOTORISTA", telefone: "21964169731", foto: "img/92119.jpg" },
+            { nome: "M. Junior", posto: "3º SGT", matricula: "99226", gpp: "GPP I", telefone: "21969757501", foto: "img/99226.jpg" },
+            { nome: "S. Ribeiro", posto: "SD", matricula: "110435", gpp: "GPP", telefone: "22999437645", foto: "img/110435.jpg" },
+            { nome: "Tiradentes", posto: "CB", matricula: "103051", gpp: "GTPP III", telefone: "22997162034", foto: "img/103051.jpg" },
+            { nome: "Felix", posto: "CB", matricula: "104291", gpp: "GTPP III", telefone: "22964649977", foto: "img/104291.jpg" },
+            { nome: "Juliano", posto: "CB", matricula: "108292", gpp: "GPP IV", telefone: "21983673231", foto: "img/108292.jpg" },
+            { nome: "Trindade", posto: "CB", matricula: "101752", gpp: "GPP III", telefone: "21987761646", foto: "img/101752.jpg" },
+            { nome: "Alisson", posto: "CB", matricula: "105507", gpp: "GPP II", telefone: "21997548077", foto: "img/105507.jpg" },
+            { nome: "Carmo", posto: "CB", matricula: "108824", gpp: "GTPP I", telefone: "21996901647", foto: "img/108824.jpg" },
+            { nome: "M. Paulo", posto: "CB", matricula: "107805", gpp: "GTPP I", telefone: "21976058456", foto: "img/107805.jpg" },
+            { nome: "Uerbert", posto: "CB", matricula: "108190", gpp: "GTPP II", telefone: "21998521847", foto: "img/108190.jpg" },
+            { nome: "Souza", posto: "3º SGT", matricula: "98339", gpp: "GTPP I", telefone: "21996380102", foto: "img/98339.jpg" },
+            { nome: "Mendes", posto: "SubTen", matricula: "70372", gpp: "SUPERVISOR", telefone: "21972505349", foto: "img/70372.jpg" },
+            { nome: "Vidal", posto: "3º SGT", matricula: "98596", gpp: "GTPP II", telefone: "21995201781", foto: "img/98596.jpg" },
+            { nome: "D. Silva", posto: "3º SGT", matricula: "102190", gpp: "GTPP II", telefone: "32988415933", foto: "img/102190.jpg" },
+            { nome: "Miranda", posto: "3º SGT", matricula: "100228", gpp: "GPP V", telefone: "21970129054", foto: "img/100228.jpg" },
+            { nome: "Almeida", posto: "3º SGT", matricula: "99791", gpp: "GPP V", telefone: "21964023724", foto: "img/99791.jpg" },
+            { nome: "Vinicius", posto: "2º SGT", matricula: "85995", gpp: "SUPERVISOR", telefone: "21987631169", foto: "img/85995.jpg" },
+            { nome: "Jhonathan", posto: "3º SGT", matricula: "91049", gpp: "DESPACHANTE", telefone: "21964779101", foto: "img/91049.jpg" },
+            { nome: "Edvan", posto: "CB", matricula: "108677", gpp: "GPP", telefone: "21989548941", foto: "img/108677.jpg" },
+            { nome: "Albuquerque", posto: "CB", matricula: "103097", gpp: "GPP", telefone: "21970375724", foto: "img/estrangeiro.jpg" },
+            { nome: "Guedes", posto: "SD", matricula: "109832", gpp: "GPP", telefone: "21990046518", foto: "img/estrangeiro.jpg" },
+            { nome: "S. Couto", posto: "CB", matricula: "106708", gpp: "GPP", telefone: "21968388608", foto: "img/estrangeiro.jpg" },
+            { nome: "Letícia", posto: "CB", matricula: "98711", gpp: "ADM", telefone: "21997915633", foto: "img/leticia.jpg" },
+            { nome: "Helaydilane", posto: "3º SGT", matricula: "92463", gpp: "ADM", telefone: "21968950744", foto: "img/92463.jpg" },
+            { nome: "Raimundo", posto: "CB", matricula: "102889", gpp: "P4", telefone: "21974209505", foto: "img/raimundo.jpg" },
+            { nome: "Torres", posto: "CB", matricula: "108786", gpp: "GTPP I", telefone: "21982572969", foto: "img/108786.jpg" },
+            { nome: "Sirlei", posto: "SUB", matricula: "70428", gpp: "ADM", telefone: "xxxxxxxxx", foto: "img/boneco_policial.png" },
+{ nome: "Anavante", posto: "3º SGT", matricula: "98939", gpp: "MANUTENIDO", telefone: "XXXXXX", foto: "img/boneco_policial.png" },
+{ nome: "Leonardo", posto: "CB", matricula: "105284", gpp: "PERMANENTE", telefone: "24993289247", foto: "img/boneco_policial.png" },
+            { nome: "Flavio Luiz", posto: "CB", matricula: "104072", gpp: "APOIO", telefone: "21982893878", foto: "img/boneco_policial.png" },
+            { nome: "L. Machado", posto: "3º SGT", matricula: "102571", gpp: "APOIO", telefone: "xxxxxxxxx", foto: "img/boneco_policial.png" },
+            { nome: "S. Oliveira", posto: "3º SGT", matricula: "93977", gpp: "APOIO", telefone: "21993803418", foto: "img/boneco_policial.png" },
+            { nome: "Campos", posto: "3º SGT", matricula: "101585", gpp: "APOIO", telefone: "21964596379", foto: "img/boneco_policial.png" },
+            { nome: "Lima", posto: "SD", matricula: "110134", gpp: "APOIO", telefone: "21970336379", foto: "img/boneco_policial.png" },
+{ nome: "Santana", posto: "SUBTEN", matricula: "65727", gpp: "MANUTENIDO", telefone: "21964523812", foto: "img/boneco_policial.png" },
+            { nome: "Bruno", posto: "3º SGT", matricula: "100235", gpp: "APOIO", telefone: "21982566832", foto: "img/boneco_policial.png" },
+            { nome: "Campos", posto: "3º SGT", matricula: "101585", gpp: "APOIO", telefone: "21964596379", foto: "img/boneco_policial.png" },
+    { nome: "Rudi", posto: "CB", matricula: "105292", gpp: "ADM", telefone: "xxxxxxxx", foto: "img/boneco_policial.png" }, 
+
+{ nome: "Nandes", posto: "SD", matricula: "111965", gpp: "PAMESP", telefone: "2126565108", foto: "img/boneco_policial.png" },
+{ nome: "Groppo", posto: "SD", matricula: "111961", gpp: "PAMESP", telefone: "21970222546", foto: "img/boneco_policial.png" },
+{ nome: "Simões", posto: "SD", matricula: "112166", gpp: "PAMESP", telefone: "21993449842", foto: "img/boneco_policial.png" },
+{ nome: "Isabela Lessa", posto: "SD", matricula: "112028", gpp: "PAMESP", telefone: "21984201948", foto: "img/boneco_policial.png" },
+
+    
+   { nome: "Amauri", posto: "CB", matricula: "102727", gpp: "APOIO", telefone: "21983763223", foto: "img/boneco_policial.png" },
+            { nome: "Louro", posto: "3º SGT", matricula: "90521", gpp: "APOIO", telefone: "21964716337", foto: "img/boneco_policial.png" },
+            { nome: "Bonifácio", posto: "3º SGT", matricula: "102154", gpp: "APOIO", telefone: "21964833629", foto: "img/boneco_policial.png" },
+            { nome: "Anderson", posto: "CB", matricula: "106071", gpp: "APOIO", telefone: "21964914757", foto: "img/boneco_policial.png" },
+            { nome: "Inocencio", posto: "3º SGT", matricula: "102430", gpp: "APOIO", telefone: "21971002524", foto: "img/boneco_policial.png" },
+            { nome: "Alessandro", posto: "CB", matricula: "108023", gpp: "APOIO", telefone: "21974117187", foto: "img/boneco_policial.png" },
+            { nome: "Raphael", posto: "3º SGT", matricula: "91030", gpp: "APOIO", telefone: "21965006239", foto: "img/boneco_policial.png" },
+            { nome: "Guedes", posto: "SD", matricula: "109832", gpp: "APOIO", telefone: "21990046518", foto: "img/boneco_policial.png" },
+            { nome: "Cristiano", posto: "CB", matricula: "106876", gpp: "APOIO", telefone: "21976679870", foto: "img/boneco_policial.png" },
+            { nome: "Neto", posto: "3º SGT", matricula: "98382", gpp: "APOIO", telefone: "21983796752", foto: "img/boneco_policial.png" },
+            { nome: "Marvim", posto: "CB", matricula: "105688", gpp: "APOIO", telefone: "21964133646", foto: "img/boneco_policial.png" },
+            { nome: "Antonio André", posto: "CB", matricula: "108663", gpp: "APOIO", telefone: "21997697509", foto: "img/boneco_policial.png" },
+            { nome: "Damasceno", posto: "SD", matricula: "109091", gpp: "APOIO", telefone: "21990215325", foto: "img/boneco_policial.png" },
+            { nome: "S. Couto", posto: "CB", matricula: "106708", gpp: "APOIO", telefone: "21968388608", foto: "img/boneco_policial.png" },
+            { nome: "Mello", posto: "CB", matricula: "103800", gpp: "APOIO", telefone: "329984199662", foto: "img/boneco_policial.png" },
+            { nome: "Euzébio", posto: "CB", matricula: "105324", gpp: "APOIO", telefone: "21982006815", foto: "img/boneco_policial.png" },
+            { nome: "Moura", posto: "3º SGT", matricula: "94429", gpp: "APOIO", telefone: "21964211720", foto: "img/boneco_policial.png" },
+            { nome: "Roberto", posto: "3º SGT", matricula: "101187", gpp: "APOIO", telefone: "21964196915", foto: "img/boneco_policial.png" },
+            { nome: "Patrick", posto: "3º SGT", matricula: "95976", gpp: "APOIO", telefone: "21964310826", foto: "img/boneco_policial.png" },
+            { nome: "W. Marinho", posto: "CB", matricula: "103780", gpp: "APOIO", telefone: "21993769598", foto: "img/boneco_policial.png" },
+            { nome: "L. Reis", posto: "3º SGT", matricula: "94493", gpp: "APOIO", telefone: "XXXXXX", foto: "img/boneco_policial.png" },
+            { nome: "L Reis", posto: "3º SGT", matricula: "94493", gpp: "APOIO", telefone: "XXXXXX", foto: "img/boneco_policial.png" },
+            { nome: "Chelque", posto: "CB", matricula: "103353", gpp: "APOIO", telefone: "21964121798", foto: "img/boneco_policial.png" },
+	    { nome: "França", posto: "SD", matricula: "109817", gpp: "APOIO", telefone: "21969280098", foto: "img/boneco_policial.png" },
+            { nome: "Baia", posto: "3º SGT", matricula: "99934", gpp: "APOIO", telefone: "21964025323", foto: "img/boneco_policial.png" },
+{ nome: "Castro", posto: "CB", matricula: "103190", gpp: "APOIO", telefone: "21964544472", foto: "img/boneco_policial.png" },
+{ nome: "P. Santana", posto: "3º SGT", matricula: "91159", gpp: "APOIO", telefone: "21970090987", foto: "img/boneco_policial.png" },
+{ nome: "P Santana", posto: "3º SGT", matricula: "91159", gpp: "APOIO", telefone: "21970090987", foto: "img/boneco_policial.png" },
+{ nome: "Chaves", posto: "3º SGT", matricula: "101882", gpp: "APOIO", telefone: "21975921335", foto: "img/boneco_policial.png" },
+{ nome: "Souza Lima", posto: "CB", matricula: "105711", gpp: "APOIO", telefone: "21968323211", foto: "img/boneco_policial.png" },
+{ nome: "Luiz Silva", posto: "CB", matricula: "105709", gpp: "APOIO", telefone: "21991695707", foto: "img/boneco_policial.png" },
+{ nome: "Geronimo", posto: "3º SGT", matricula: "96572", gpp: "APOIO", telefone: "21990996834", foto: "img/boneco_policial.png" },
+{ nome: "L. Almeida", posto: "3º SGT", matricula: "93227", gpp: "APOIO", telefone: "XXXXXX", foto: "img/boneco_policial.png" },
+{ nome: "Ximenes", posto: "3º SGT", matricula: "101235", gpp: "APOIO", telefone: "21983232636", foto: "img/boneco_policial.png" },
+{ nome: "Granja", posto: "3º SGT", matricula: "92156", gpp: "APOIO", telefone: "21975935737", foto: "img/boneco_policial.png" },
+{ nome: "Gelson", posto: "3º SGT", matricula: "90431", gpp: "APOIO", telefone: "21971775779", foto: "img/boneco_policial.png" },
+{ nome: "Luciano", posto: "CB", matricula: "105475", gpp: "APOIO", telefone: "21965494587", foto: "img/boneco_policial.png" },
+{ nome: "Clécio", posto: "3º SGT", matricula: "94319", gpp: "APOIO", telefone: "21964417050", foto: "img/boneco_policial.png" },
+{ nome: "XXXX", posto: "XXX", matricula: "XXXXX", gpp: "XXXX", telefone: "XXXXXX", foto: "img/boneco_policial.png" },
+{ nome: "XXXX", posto: "XXX", matricula: "XXXXX", gpp: "XXXX", telefone: "XXXXXX", foto: "img/boneco_policial.png" }
+
+
+        ];
+
+        // SISTEMA DE TEMA (CLARO/ESCURO)
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                enableDarkMode();
+            } else if (savedTheme === 'light') {
+                enableLightMode();
+            } else {
+                // Se o usuário não escolheu nada, usa o horário como base inicial
+                const hora = new Date().getHours();
+                if (hora >= 18 || hora < 6) enableDarkMode();
+                else enableLightMode();
+            }
+        }
+
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            document.getElementById('mode-status').innerText = "🌙 MODO NOTURNO ATIVO";
+            document.getElementById('current-mode').innerText = "Noturno";
+            document.getElementById('theme-toggle').innerText = "☀️";
+            localStorage.setItem('theme', 'dark');
+        }
+
+        function enableLightMode() {
+            document.body.classList.remove('dark-mode');
+            document.getElementById('mode-status').innerText = "☀️ MODO DIURNO ATIVO";
+            document.getElementById('current-mode').innerText = "Normal";
+            document.getElementById('theme-toggle').innerText = "🌙";
+            localStorage.setItem('theme', 'light');
+        }
+
+        function toggleTheme() {
+            if (document.body.classList.contains('dark-mode')) {
+                enableLightMode();
+            } else {
+                enableDarkMode();
+            }
+        }
+
+        // SISTEMA DE PLANTAO
+        function getTurnoAtual() {
+            const totalTurnos = Math.floor((new Date().getTime() - dataBaseEscala) / (1000 * 60 * 60 * 12));
+            let index = totalTurnos % 10;
+            return { id: totalTurnos, index: index < 0 ? index + 10 : index };
+        }
+
+        function atualizarPlantaoUI() {
+            const turno = getTurnoAtual();
+            const sup = localStorage.getItem(`sup_${turno.id}`) || supervisoresCiclo[turno.index];
+            const perm = localStorage.getItem(`perm_${turno.id}`) || permanentesCiclo[turno.index];
+            document.getElementById('duty-supervisor').innerText = sup;
+            document.getElementById('duty-permanente').innerText = perm;
+            filtrar();
+            initTheme(); // Inicia o tema ao carregar a interface
+        }
+
+        function editarPlantao(tipo) {
+            const turno = getTurnoAtual();
+            const novo = prompt(`Trocar ${tipo}:`, document.getElementById(`duty-${tipo}`).innerText);
+            if (novo) {
+                localStorage.setItem(`${tipo === 'supervisor' ? 'sup' : 'perm'}_${turno.id}`, novo.toUpperCase());
+                atualizarPlantaoUI();
+            }
+        }
+
+        // RENDERIZAÇÃO E FILTRO
+        function render(lista) {
+            const container = document.getElementById("cards");
+            container.innerHTML = lista.length ? "" : `<div class="no-results">Nenhum resultado encontrado.</div>`;
+            
+            const supAtu = document.getElementById('duty-supervisor').innerText.toUpperCase();
+            const permAtu = document.getElementById('duty-permanente').innerText.toUpperCase();
+
+            lista.forEach(p => {
+                const zap = `https://wa.me/55${p.telefone.replace(/\D/g, '')}`;
+                const destaque = supAtu.includes(p.nome.toUpperCase()) || permAtu.includes(p.nome.toUpperCase());
+                
+                container.innerHTML += `
+                    <div class="card ${destaque ? 'em-plantao' : ''}">
+                        <img src="${p.foto}" onclick="ampliar('${p.foto}')" onerror="this.src='img/boneco_policial.png'">
+                        <div class="info">
+                            <strong>${p.posto} PM ${p.matricula}</strong>
+                            <span>${p.nome}</span>
+                            <div class="gpp-tag">${p.gpp}</div>
+                            <div class="contact-actions">
+                                <a href="tel:${p.telefone}" class="btn-call">📞 ${p.telefone}</a>
+                                ${!p.telefone.includes('x') && !p.telefone.includes('X') ? `<a href="${zap}" target="_blank" class="btn-whatsapp">WhatsApp</a>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById("total").textContent = lista.length;
+        }
+
+        function filtrar() {
+            const termo = document.getElementById("search-input").value.toLowerCase();
+            const gpp = document.getElementById("filter-gpp").value;
+            const res = policiais.filter(p => 
+                (p.nome.toLowerCase().includes(termo) || p.matricula.includes(termo)) &&
+                (gpp === "" || p.gpp === gpp)
+            );
+            render(res);
+        }
+
+        function limparBusca() {
+            document.getElementById("search-input").value = "";
+            document.getElementById("filter-gpp").value = "";
+            filtrar();
+        }
+
+        function ampliar(src) {
+            document.getElementById("imgAmpliada").src = src;
+            document.getElementById("imageModal").style.display = "flex";
+        }
+
+        window.onload = atualizarPlantaoUI;
+        document.getElementById("search-input").oninput = filtrar;
+        document.getElementById("filter-gpp").onchange = filtrar;
+    </script>
 </body>
 </html>
-
-
-
